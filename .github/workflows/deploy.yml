@@ -1,12 +1,15 @@
 name: Deploy to GitHub Pages
 
+# 手動実行のみとする。
+# リポジトリの Pages がまだ有効化されておらず、configure-pages が
+# 「Get Pages site failed」で落ちるため、mainへのpushのたびに失敗が残る。
+# Pages を有効化したら push トリガー（branches: [main]）を戻すこと。
+# P0-4「mainへのpushで自動配信される」はそれまで未達のままとする。
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 # basePath は GITHUB_ACTIONS と GITHUB_REPOSITORY から導出される。
-# 詳細は next.config.ts を参照。
+# 詳細は config/basePath.mjs を参照。
 permissions:
   contents: read
   pages: write
