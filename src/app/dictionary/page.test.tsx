@@ -101,12 +101,20 @@ describe("相撲用語辞典", () => {
     );
   });
 
-  it("セーブがない場合はタイトルへ戻す", async () => {
+  it("セーブがなくても開ける", async () => {
+    // タイトルからの導線に含まれるため（PRD「12. 主要画面」）。
     renderPage();
 
-    await waitFor(() => expect(replace).toHaveBeenCalledWith("/"));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "まだ何もない" }),
+      ).toBeInTheDocument(),
+    );
+    expect(replace).not.toHaveBeenCalled();
+    expect(screen.getByText("0 のことばに出会った")).toBeInTheDocument();
+    // マップへは入れないため、戻り先はタイトルにする。
     expect(
-      screen.getByRole("region", { name: "記録がありません" }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "タイトルへもどる" }),
+    ).toHaveAttribute("href", "/");
   });
 });

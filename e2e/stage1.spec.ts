@@ -233,6 +233,29 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
   });
 
+  // 図鑑と辞典はタイトルからの導線に含まれる（PRD「12. 主要画面」）。
+  test("セーブがなくても図鑑と辞典を開ける", async ({ page }) => {
+    await page.goto("./");
+
+    await page.getByRole("link", { name: "わざずかん" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "わざずかん",
+    );
+    await page.getByRole("link", { name: "タイトルへもどる" }).click();
+
+    await page.getByRole("link", { name: "すもうじてん" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "すもうじてん",
+    );
+    await expect(
+      page.getByRole("region", { name: "まだ何もない" }),
+    ).toBeVisible();
+    await page.getByRole("link", { name: "タイトルへもどる" }).click();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "SUMO QUEST" }),
+    ).toBeVisible();
+  });
+
   test("セーブがない状態でマップへ直接来るとタイトルへ戻される", async ({
     page,
   }) => {

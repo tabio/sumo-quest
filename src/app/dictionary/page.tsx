@@ -4,7 +4,6 @@ import { GameShell } from "@/components/game/GameShell";
 import { PixelWindow } from "@/components/game/PixelWindow";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { useGame } from "@/hooks/useGame";
-import { useRouteGuard } from "@/hooks/useRouteGuard";
 import { discoveredTerms } from "@/lib/content";
 import styles from "./page.module.css";
 
@@ -13,30 +12,17 @@ import styles from "./page.module.css";
 // 出会った用語だけを載せる。
 // 未発見のものは件数も出さない。技図鑑とちがい、
 // 用語は「集める対象」ではなく「出会った記録」だからである。
+//
+// セーブがなくても開ける。タイトルからの導線に含まれるため（PRD「12. 主要画面」）。
 
 export default function DictionaryPage() {
-  const { isReady, state } = useGame();
-  // セーブがない状態で直接来た場合はタイトルへ戻す（設計書「16.」）。
-  const guard = useRouteGuard();
+  const { isReady, state, hasSave } = useGame();
 
   if (!isReady) {
     return (
       <GameShell title="すもうじてん">
         <PixelWindow>
           <p>よみこみちゅう...</p>
-        </PixelWindow>
-      </GameShell>
-    );
-  }
-
-  if (guard.kind === "redirect") {
-    return (
-      <GameShell title="すもうじてん">
-        <PixelWindow heading="記録がありません">
-          <p>タイトルへもどります。</p>
-          <PixelLink href="/" variant="primary">
-            タイトルへ
-          </PixelLink>
         </PixelWindow>
       </GameShell>
     );
@@ -71,9 +57,16 @@ export default function DictionaryPage() {
       )}
 
       <PixelWindow>
-        <PixelLink href="/map" variant="primary">
-          マップへもどる
-        </PixelLink>
+        {/* セーブがない状態ではマップへ入れないため、戻り先を出し分ける。 */}
+        {hasSave ? (
+          <PixelLink href="/map" variant="primary">
+            マップへもどる
+          </PixelLink>
+        ) : (
+          <PixelLink href="/" variant="primary">
+            タイトルへもどる
+          </PixelLink>
+        )}
       </PixelWindow>
     </GameShell>
   );
