@@ -2,30 +2,38 @@
 // 定義の根拠は設計書「8. データモデル」。ここは実装への写しである。
 // 型を変える必要が出た場合は、設計書を直接書き換えず docs/plans/decisions/ にADRを追加する。
 
+/** ステージの永続キーの一覧。セーブデータの検証で実体が必要になるため定数で持つ。 */
+export const STAGE_IDS = [
+  "sumo-stable",
+  "dohyo",
+  "dojo",
+  "banzuke-shrine",
+  "kokugikan",
+  "yokozuna-castle",
+] as const;
+
 /** ステージの永続キー。表示順は order で持ち、この並びには依存しない。 */
-export type StageId =
-  | "sumo-stable"
-  | "dohyo"
-  | "dojo"
-  | "banzuke-shrine"
-  | "kokugikan"
-  | "yokozuna-castle";
+export type StageId = (typeof STAGE_IDS)[number];
 
 /** ステージの進行状態。learning完了と取組クリアを区別する。 */
 export type StageStatus = "locked" | "unlocked" | "lessonCompleted" | "cleared";
 
+/** 番付の永続キーの一覧。下位から昇順。 */
+export const RANK_IDS = [
+  "jonokuchi",
+  "jonidan",
+  "sandanme",
+  "makushita",
+  "juryo",
+  "maegashira",
+  "komusubi",
+  "sekiwake",
+  "ozeki",
+  "yokozuna",
+] as const;
+
 /** 番付の永続キー。累積EXPからの導出は lib 側で行う。 */
-export type RankId =
-  | "jonokuchi"
-  | "jonidan"
-  | "sandanme"
-  | "makushita"
-  | "juryo"
-  | "maegashira"
-  | "komusubi"
-  | "sekiwake"
-  | "ozeki"
-  | "yokozuna";
+export type RankId = (typeof RANK_IDS)[number];
 
 /** localStorage に保存するセーブデータ。version は移行判定に使う。 */
 export type PlayerSave = {
