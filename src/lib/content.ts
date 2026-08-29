@@ -66,6 +66,11 @@ export function hasContent(stage: Stage): boolean {
   return lessonsOfStage(stage).length > 0;
 }
 
+/** 最終ステージ。order が最も大きいものを正とする。 */
+export function finalStage(): Stage {
+  return [...stages].sort((a, b) => b.order - a.order)[0];
+}
+
 /** 静的エクスポート用に全ステージIDを返す。 */
 export function allStageIds(): StageId[] {
   return stages.map((stage) => stage.id);

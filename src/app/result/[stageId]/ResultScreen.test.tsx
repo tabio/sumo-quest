@@ -8,7 +8,7 @@ import { useGame } from "@/hooks/useGame";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
-import type { PlayerSave } from "@/types/game";
+import type { PlayerSave, Stage } from "@/types/game";
 import { ResultScreen } from "./ResultScreen";
 
 const replace = vi.fn();
@@ -49,6 +49,35 @@ function Harness({ allCorrect }: { allCorrect: boolean }) {
         取組をおえる
       </button>
       <ResultScreen stageId={stage.id} />
+    </div>
+  );
+}
+
+/** 最終試験を全問正解で終えるための足場。 */
+function FinalHarness({
+  stage: finalStage,
+  quizIds,
+}: {
+  stage: Stage;
+  quizIds: string[];
+}) {
+  const { dispatch } = useGame();
+
+  return (
+    <div>
+      <button
+        onClick={() =>
+          dispatch({
+            type: "FINISH_BATTLE",
+            stage: finalStage,
+            results: quizIds.map((quizId) => ({ quizId, correct: true })),
+            now: "2026-08-29T12:00:00.000Z",
+          })
+        }
+      >
+        取組をおえる
+      </button>
+      <ResultScreen stageId={finalStage.id} />
     </div>
   );
 }
@@ -234,6 +263,57 @@ describe("リザルト画面", () => {
         screen.getByRole("region", { name: "表示できる結果がありません" }),
       ).toBeInTheDocument(),
     );
+  });
+
+  it("最終試験に勝つとエンディングへ誘う", async () => {
+    // P3-4。エンディングは最終試験のクリアからのみ到達する。
+    const user = userEvent.setup();
+    const final = [...stages].sort((a, b) => b.order - a.order)[0];
+    const finalQuizzes = quizzes.filter((quiz) => quiz.stageId === final.id);
+
+    const base = createSave();
+    storeSave(
+      createSave({
+        stageProgress: {
+          ...base.stageProgress,
+          [final.id]: { status: "unlocked", bestScore: 0, attempts: 0 },
+        },
+      }),
+    );
+
+    render(
+      <GameProvider>
+        <FinalHarness stage={final} quizIds={finalQuizzes.map((q) => q.id)} />
+      </GameProvider>,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "取組をおえる" }),
+      ).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: "取組をおえる" }));
+
+    expect(
+      screen.getByRole("link", { name: "エンディングへ" }),
+    ).toHaveAttribute("href", "/ending");
+  });
+
+  it("最終試験でないステージからはエンディングへ誘わない", async () => {
+    const user = userEvent.setup();
+    storeSave();
+    renderResult();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "取組をおえる" }),
+      ).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: "取組をおえる" }));
+
+    expect(
+      screen.queryByRole("link", { name: "エンディングへ" }),
+    ).not.toBeInTheDocument();
   });
 
   it("マップへ戻れる", async () => {

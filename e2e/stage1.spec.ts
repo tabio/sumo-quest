@@ -218,6 +218,20 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
     await expect(learned).toContainText("まわし");
   });
 
+  // エンディングは最終試験のクリアからのみ到達する（P3-4）。
+  test("最終試験の前にエンディングへ直接来るとマップへ戻される", async ({
+    page,
+  }) => {
+    await page.goto("./");
+    await page.getByRole("link", { name: "はじめから" }).click();
+    await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
+    await page.getByRole("button", { name: "けってい" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+
+    await page.goto("ending/");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+  });
+
   test("セーブがない状態でマップへ直接来るとタイトルへ戻される", async ({
     page,
   }) => {
