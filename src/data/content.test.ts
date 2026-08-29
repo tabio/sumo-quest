@@ -37,14 +37,15 @@ describe("ステージの投入状況", () => {
     expect(stages).toHaveLength(6);
   });
 
-  it("コンテンツが入っているのは STAGE 1〜4", () => {
-    // STAGE 5以降は P2-7 と Phase 3 で投入する。
+  it("コンテンツが入っているのは STAGE 1〜5", () => {
+    // 最終ステージは Phase 3 で投入する。
     const withContent = stages.filter((stage) => stage.lessonIds.length > 0);
     expect(withContent.map((stage) => stage.id)).toEqual([
       "sumo-stable",
       "dohyo",
       "dojo",
       "banzuke-shrine",
+      "kokugikan",
     ]);
   });
 
@@ -53,7 +54,7 @@ describe("ステージの投入状況", () => {
     expect(techniques).toHaveLength(6);
   });
 
-  it.each(["sumo-stable", "dohyo", "dojo", "banzuke-shrine"])(
+  it.each(["sumo-stable", "dohyo", "dojo", "banzuke-shrine", "kokugikan"])(
     "%s のクイズが5問ある",
     (stageId) => {
       expect(quizzes.filter((quiz) => quiz.stageId === stageId)).toHaveLength(
