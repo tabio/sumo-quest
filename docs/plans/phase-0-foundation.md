@@ -12,7 +12,7 @@
 | ID | タスク | 完了条件 | 状態 |
 |---|---|---|---|
 | P0-1 | Next.js（App Router）+ TypeScript でプロジェクト初期化 | `npm run dev` でトップページが表示される | 完了 |
-| P0-2 | Lint / フォーマット / テストランナー導入 | `npm run lint`、テストコマンドが成功する | 未着手 |
+| P0-2 | Lint / フォーマット / テストランナー導入 | `npm run lint`、テストコマンドが成功する | 完了 |
 | P0-3 | `next.config.ts` に静的エクスポートと `basePath` を設定 | `npm run build` で `out/` が生成される | 未着手 |
 | P0-4 | GitHub Actions ワークフロー作成、Pages有効化 | mainへのpushで自動配信される | 未着手 |
 | P0-5 | 型定義 `src/types/game.ts` を作成 | 設計書「8. データモデル」の型が揃う | 未着手 |
@@ -34,4 +34,5 @@ Phase 1以降に持ち越すと、原因の切り分けコストが跳ね上が�
 ## 関連
 
 - リスク: [R-1](risks.md)（サブパス配信）
+- 決定: [ADR-0002](decisions/0002-lint-format-test-tooling.md)（Lint・フォーマット・テストランナーの選定）
 - 次フェーズ: [phase-1-vertical-slice.md](phase-1-vertical-slice.md)
