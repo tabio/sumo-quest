@@ -2,11 +2,13 @@ import {
   clearStage,
   completeLesson,
   discoverTerms,
+  isQuizPassed,
   learnTechniques,
   recordQuizResults,
   type QuizResult,
 } from "@/lib/game";
 import { rankFromExperience } from "@/lib/ranks";
+import { currentRank } from "@/lib/selectors";
 import { SAVE_VERSION, type SaveErrorReason } from "@/lib/validation";
 import {
   STAGE_IDS,
@@ -34,17 +36,39 @@ export type SaveStatus =
   /** localStorage が使えない。プレイは継続する。 */
   | { kind: "unavailable" };
 
+/**
+ * 直近の取組の結果。リザルト画面の表示にだけ使う。
+ * セーブには保存しない。再読み込みで消えてよい（ADR-0004）。
+ */
+export type BattleSummary = {
+  stageId: StageId;
+  stageName: string;
+  score: number;
+  total: number;
+  passed: boolean;
+  gainedExperience: number;
+  rankBefore: string;
+  rankAfter: string;
+  promoted: boolean;
+  newTechniqueIds: string[];
+  newTermIds: string[];
+  unlockedStageId?: StageId;
+};
+
 export type GameState = {
   save: PlayerSave | null;
   status: SaveStatus;
   /** 直近の保存に失敗したか。画面で「保存できませんでした」を出す。 */
   saveFailed: boolean;
+  /** 直近の取組の結果。リザルト画面が読む。 */
+  lastBattle: BattleSummary | null;
 };
 
 export const initialGameState: GameState = {
   save: null,
   status: { kind: "loading" },
   saveFailed: false,
+  lastBattle: null,
 };
 
 export type GameAction =
@@ -63,6 +87,7 @@ export type GameAction =
       results: QuizResult[];
       now: string;
     }
+  | { type: "FINISH_BATTLE"; stage: Stage; results: QuizResult[]; now: string }
   | { type: "CLEAR_STAGE"; stage: Stage; now: string }
   | { type: "UNLOCK_TECHNIQUE"; techniqueIds: string[] }
   | { type: "DISCOVER_TERM"; termIds: string[] }
@@ -125,6 +150,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         save: createInitialSave(action.playerName, action.now),
         status: { kind: "ready" },
         saveFailed: false,
+        lastBattle: null,
       };
 
     case "LOAD_GAME": {
@@ -135,21 +161,29 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             save: result.data,
             status: { kind: "ready" },
             saveFailed: false,
+            lastBattle: null,
           };
         case "empty":
-          return { save: null, status: { kind: "empty" }, saveFailed: false };
+          return {
+            save: null,
+            status: { kind: "empty" },
+            saveFailed: false,
+            lastBattle: null,
+          };
         case "corrupted":
           return {
             // 破損データは消さない。読み込まないだけにする。
             save: null,
             status: { kind: "corrupted", reason: result.reason },
             saveFailed: false,
+            lastBattle: null,
           };
         case "unavailable":
           return {
             save: null,
             status: { kind: "unavailable" },
             saveFailed: false,
+            lastBattle: null,
           };
       }
     }
@@ -173,6 +207,46 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         recordQuizResults(save, action.stageId, action.results, action.now),
       );
 
+    case "FINISH_BATTLE": {
+      if (!state.save) return state;
+
+      const { stage, results, now } = action;
+      const before = state.save;
+      const score = results.filter((result) => result.correct).length;
+      const passed = isQuizPassed(stage, score, results.length);
+
+      const recorded = recordQuizResults(before, stage.id, results, now);
+      const after = passed ? clearStage(recorded, stage, now) : recorded;
+
+      return {
+        ...state,
+        save: after,
+        lastBattle: {
+          stageId: stage.id,
+          stageName: stage.name,
+          score,
+          total: results.length,
+          passed,
+          gainedExperience: after.experience - before.experience,
+          rankBefore: currentRank(before).name,
+          rankAfter: currentRank(after).name,
+          promoted: currentRank(before).id !== currentRank(after).id,
+          newTechniqueIds: after.learnedTechniqueIds.filter(
+            (id) => !before.learnedTechniqueIds.includes(id),
+          ),
+          newTermIds: after.discoveredTermIds.filter(
+            (id) => !before.discoveredTermIds.includes(id),
+          ),
+          unlockedStageId:
+            passed &&
+            stage.unlocks &&
+            before.stageProgress[stage.unlocks]?.status === "locked"
+              ? stage.unlocks
+              : undefined,
+        },
+      };
+    }
+
     case "CLEAR_STAGE":
       return withSave(state, (save) =>
         clearStage(save, action.stage, action.now),
@@ -187,7 +261,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return withSave(state, (save) => discoverTerms(save, action.termIds));
 
     case "RESET_GAME":
-      return { save: null, status: { kind: "empty" }, saveFailed: false };
+      return {
+        save: null,
+        status: { kind: "empty" },
+        saveFailed: false,
+        lastBattle: null,
+      };
 
     case "SAVE_FAILED":
       return state.saveFailed ? state : { ...state, saveFailed: true };

@@ -28,7 +28,12 @@ const stage1: Stage = {
 };
 
 function readyState(save = createSave()): GameState {
-  return { save, status: { kind: "ready" }, saveFailed: false };
+  return {
+    save,
+    status: { kind: "ready" },
+    saveFailed: false,
+    lastBattle: null,
+  };
 }
 
 describe("createInitialSave", () => {
@@ -74,6 +79,7 @@ describe("LOAD_GAME", () => {
       save,
       status: { kind: "ready" },
       saveFailed: false,
+      lastBattle: null,
     });
   });
 
@@ -179,6 +185,7 @@ describe("進行のアクション", () => {
       save: null,
       status: { kind: "empty" },
       saveFailed: false,
+      lastBattle: null,
     };
     const next = gameReducer(state, {
       type: "CLEAR_STAGE",
