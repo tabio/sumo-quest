@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
   assetPrefix: basePath || undefined,
   // 画像最適化はサーバーを必要とするため無効化する。
   images: { unoptimized: true },
+
+  // basePath をクライアント側からも参照できるようにする。
+  // next/image の src には basePath が自動で付かないため、
+  // src/lib/imagePath.ts がこの値を使って解決する。
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
 };
 
 export default nextConfig;

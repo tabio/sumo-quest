@@ -8,3 +8,17 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
+
+.talk {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.portrait {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+}
