@@ -39,7 +39,7 @@ const lesson1: Lesson = {
   id: "lesson-1",
   stageId: "sumo-stable",
   speakerId: "oyakata",
-  messages: ["よく来たな。"],
+  messages: [{ text: "よく来たな。" }],
   rewardExp: 10,
   discoverTermIds: ["dohyo"],
   unlockTechniqueIds: ["yorikiri"],
@@ -192,7 +192,7 @@ describe("コンテンツ検証", () => {
 
   it("空のメッセージを検出する", () => {
     const problems = problemsAfter((bundle) => {
-      bundle.lessons[0].messages = ["よく来たな。", "   "];
+      bundle.lessons[0].messages = [{ text: "よく来たな。" }, { text: "   " }];
     });
     expect(problems).toContain("lesson lesson-1: 空のメッセージがある");
   });

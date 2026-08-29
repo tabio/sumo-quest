@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { PixelWindow } from "@/components/game/PixelWindow";
+import { LessonFigure } from "@/components/learning/figures";
 import { PixelButton } from "@/components/ui/PixelButton";
 import { findNpc } from "@/lib/content";
 import { imagePath } from "@/lib/imagePath";
@@ -38,6 +39,7 @@ export function LessonPlayer({
   const [completed, setCompleted] = useState(false);
 
   const speaker = findNpc(lesson.speakerId);
+  const message = lesson.messages[index];
   const total = lesson.messages.length;
   const isLast = index === total - 1;
 
@@ -69,10 +71,14 @@ export function LessonPlayer({
             <p className={styles.speaker}>{speaker?.name ?? "？"}</p>
             {/* 差し替わる本文を読み上げに伝える。 */}
             <p className={styles.message} aria-live="polite">
-              {lesson.messages[index]}
+              {message.text}
             </p>
           </div>
         </div>
+
+        {/* 位置関係や順序は文章だけでは像を結びにくいため、図を差し込む（ADR-0009）。
+            図があるのは一部の画面だけで、無い画面は文章のみを出す。 */}
+        {message.figureId ? <LessonFigure figureId={message.figureId} /> : null}
 
         <p className={styles.progress}>
           {index + 1} / {total}
