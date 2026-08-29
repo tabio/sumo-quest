@@ -1,5 +1,6 @@
 .count {
   font-family: var(--font-pixel);
+  color: var(--color-accent-light);
 }
 
 .list {
@@ -14,16 +15,24 @@
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-3);
-  border: var(--border-width) solid var(--color-border);
+  /* 習得済みはオレンジの帯を出す。未習得は下で灰に落とす。 */
+  border-left: var(--space-1) solid var(--color-accent);
+  border-top: 1px solid var(--color-divider);
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
   border-radius: var(--border-radius);
   background-color: var(--color-surface);
+  background-image: var(--gradient-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 /* 未習得は色だけでなく、名前と説明の文言でも区別できるようにする。
  * 文字は補助テキスト色にする。伏せてはいるが読ませる情報であり、
  * 操作できない部品ではないため、コントラストを落とさない。 */
 .unknown {
-  border-color: var(--color-disabled);
+  border-left-color: var(--color-disabled);
+  background-image: none;
+  box-shadow: none;
   color: var(--color-text-muted);
 }
 

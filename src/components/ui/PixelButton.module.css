@@ -14,28 +14,61 @@
   letter-spacing: 0.06em;
   text-align: center;
 
+  /* 面は単色ではなく階調を持たせ、上辺の光と下辺の影で立体にする。 */
   background-color: var(--color-surface-raised);
+  background-image: var(--gradient-raised);
   color: var(--color-text);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius);
+  box-shadow: var(--shadow-raised);
+  text-shadow: var(--text-shadow-pixel);
   cursor: pointer;
-  transition: background-color var(--duration-fast) linear;
+  transition:
+    background-color var(--duration-fast) linear,
+    border-color var(--duration-fast) linear,
+    transform var(--duration-fast) linear,
+    box-shadow var(--duration-fast) linear;
 }
 
 .button:hover:not(:disabled) {
+  background-image: var(--gradient-accent);
   background-color: var(--color-accent);
+  border-color: var(--color-accent-light);
   color: var(--color-accent-text);
+  text-shadow: none;
+}
+
+/* 押し込み。影を畳んで下へ2px沈める。
+ * 動きを嫌う設定では duration が潰れて瞬時に切り替わる。 */
+.button:active:not(:disabled) {
+  transform: translateY(var(--border-width));
+  box-shadow: var(--shadow-pressed);
 }
 
 .primary {
   background-color: var(--color-accent);
+  background-image: var(--gradient-accent);
+  border-color: var(--color-accent-light);
   color: var(--color-accent-text);
+  text-shadow: none;
+}
+
+.primary:hover:not(:disabled) {
+  background-image: linear-gradient(
+    180deg,
+    #ffc880 0%,
+    var(--color-accent-light) 55%,
+    var(--color-accent) 100%
+  );
 }
 
 .button:disabled {
   background-color: var(--color-surface);
+  background-image: none;
   color: var(--color-disabled);
   border-color: var(--color-disabled);
+  box-shadow: none;
+  text-shadow: none;
   cursor: not-allowed;
 }
 

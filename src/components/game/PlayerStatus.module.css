@@ -1,14 +1,20 @@
 .status {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  align-items: baseline;
+  gap: var(--space-2) var(--space-2);
+  align-items: stretch;
 }
 
+/* 各項目を沈んだ面に置き、ステータス表示らしい区切りを作る。 */
 .item {
   display: flex;
   gap: var(--space-2);
   align-items: baseline;
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-pressed);
 }
 
 .label {
@@ -19,10 +25,12 @@
 .value {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
+  color: var(--color-accent-light);
 }
 
 .next {
   width: 100%;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  padding-top: var(--space-1);
 }

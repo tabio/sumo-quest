@@ -10,12 +10,15 @@
   gap: var(--space-3);
 }
 
+/* 立ち絵の枠。沈んだ面に置き、額縁のように見せる。 */
 .portrait {
   flex-shrink: 0;
   width: 64px;
   height: 64px;
   border: var(--border-width) solid var(--color-border);
-  background-color: var(--color-bg);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface-sunken);
+  box-shadow: var(--shadow-pressed);
 }
 
 .speech {
@@ -28,6 +31,7 @@
   font-family: var(--font-pixel);
   color: var(--color-accent);
   letter-spacing: 0.06em;
+  text-shadow: var(--text-shadow-pixel);
 }
 
 .message {
@@ -49,4 +53,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-divider);
 }
