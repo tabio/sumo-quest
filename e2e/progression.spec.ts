@@ -79,6 +79,39 @@ async function seeEnding(page: Page) {
 }
 
 test.describe("全ステージの通しプレイ", () => {
+  // Phase 3 の完了ゲート「EXPを最大まで稼いでも、最終試験未クリアなら横綱にならない」。
+  test("最終試験の前は、EXPを稼ぎきっても横綱にならない", async ({ page }) => {
+    test.slow();
+
+    await page.goto("./");
+    await page.getByRole("link", { name: "はじめから" }).click();
+    await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
+    await page.getByRole("button", { name: "けってい" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+
+    // 最終試験の手前まで、取れるEXPをすべて取る。
+    for (const stage of playable.slice(0, -1)) {
+      await clearStage(page, stage.id, stage.name);
+    }
+
+    // 最終試験の学習まで済ませると、EXPで上がれる番付は最上位に達する。
+    const final = playable.at(-1)!;
+    await page.getByRole("link", { name: new RegExp(final.name) }).click();
+    await readLesson(page, final.id);
+    await page.getByRole("link", { name: "マップへもどる" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+
+    const yokozuna = ranks.find((rank) => rank.requiresFinalExam)!;
+    const top = [...ranks]
+      .filter((rank) => !rank.requiresFinalExam)
+      .sort((a, b) => b.order - a.order)[0];
+
+    await expect(page.getByText(top.name, { exact: true })).toBeVisible();
+    await expect(page.getByText(yokozuna.name, { exact: true })).toHaveCount(0);
+    // EXPでは上がれないことが画面からも分かる。
+    await expect(page.getByText(/最終試験に かてば なれる/)).toBeVisible();
+  });
+
   test("順番に解放され、横綱まで到達できる", async ({ page }) => {
     test.slow();
 

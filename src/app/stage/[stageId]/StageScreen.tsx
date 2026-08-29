@@ -101,6 +101,9 @@ export function StageScreen({ stageId }: { stageId: string }) {
         <PixelLink href={`/battle/${stage.id}`} variant="primary">
           取組へ
         </PixelLink>
+        {/* 稽古を終えても取組へ進まない選択を残す。
+            ここから戻れないと、図鑑を見に行くにもブラウザの戻るしかない。 */}
+        <PixelLink href="/map">マップへもどる</PixelLink>
       </LessonPlayer>
     </GameShell>
   );

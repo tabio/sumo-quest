@@ -1,6 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
+import {
+  experienceToNextRank,
+  nextRank,
+  rankFromExperience,
+} from "@/lib/ranks";
 import { techniques } from "@/data/techniques";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
@@ -64,9 +69,14 @@ describe("useGame", () => {
     await waitFor(() =>
       expect(screen.getByTestId("hasSave")).toHaveTextContent("true"),
     );
-    expect(screen.getByTestId("rank")).toHaveTextContent("序二段");
-    expect(screen.getByTestId("next")).toHaveTextContent("三段目");
-    expect(screen.getByTestId("toNext")).toHaveTextContent("60");
+    // 番付の境目はデータ側で調整されるため、期待値もそこから導く。
+    expect(screen.getByTestId("rank")).toHaveTextContent(
+      rankFromExperience(100).name,
+    );
+    expect(screen.getByTestId("next")).toHaveTextContent(nextRank(100)!.name);
+    expect(screen.getByTestId("toNext")).toHaveTextContent(
+      String(experienceToNextRank(100)),
+    );
     expect(screen.getByTestId("stage")).toHaveTextContent("すもう部屋");
     expect(screen.getByTestId("unlocked")).toHaveTextContent("true");
     expect(screen.getByTestId("locked")).toHaveTextContent("false");

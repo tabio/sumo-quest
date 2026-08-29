@@ -3,7 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { quizzes } from "@/data/quizzes";
+import { ranks } from "@/data/ranks";
 import { stages } from "@/data/stages";
+import { QUIZ_CORRECT_REWARD_EXP } from "@/lib/game";
+import { rankFromExperience } from "@/lib/ranks";
 import { useGame } from "@/hooks/useGame";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
@@ -127,8 +130,14 @@ describe("リザルト画面", () => {
 
   it("昇進した場合は前後の番付を出す", async () => {
     const user = userEvent.setup();
-    // 60 EXP から始めると、100 EXP 獲得で 160 EXP になり三段目へ上がる。
-    storeSave(createSave({ experience: 60 }));
+    // 番付の境目はデータ側で調整されるため、昇進する開始EXPもそこから決める。
+    // この取組で入るEXP（正解ぶん＋クリア報酬）をまたぐように置く。
+    const gained =
+      stage1Quizzes.length * QUIZ_CORRECT_REWARD_EXP + stage.clearRewardExp;
+    const border = ranks.find((rank) => rank.order === 2)!.requiredExperience;
+    const before = border - 10;
+
+    storeSave(createSave({ experience: before }));
     renderResult();
 
     await waitFor(() =>
@@ -138,18 +147,22 @@ describe("リザルト画面", () => {
     );
     await user.click(screen.getByRole("button", { name: "取組をおえる" }));
 
-    expect(screen.getByRole("region", { name: "成績" })).toHaveTextContent(
-      "序ノ口 → 三段目",
-    );
-    expect(screen.getByRole("region", { name: "成績" })).toHaveTextContent(
-      "番付が 三段目 に上がった。",
-    );
+    const beforeName = rankFromExperience(before).name;
+    const afterName = rankFromExperience(before + gained).name;
+    expect(beforeName).not.toBe(afterName);
+
+    const summary = screen.getByRole("region", { name: "成績" });
+    expect(summary).toHaveTextContent(`${beforeName} → ${afterName}`);
+    expect(summary).toHaveTextContent(`番付が ${afterName} に上がった。`);
   });
 
   it("昇進していない場合は現在の番付だけを出す", async () => {
     const user = userEvent.setup();
-    // 大関（1060）から100 EXP増えても、横綱は最終試験が条件なので昇進しない。
-    storeSave(createSave({ experience: 1060 }));
+    // EXPで上がれる最上位からさらに稼いでも、横綱は最終試験が条件なので昇進しない。
+    const top = [...ranks]
+      .filter((rank) => !rank.requiresFinalExam)
+      .sort((a, b) => b.order - a.order)[0];
+    storeSave(createSave({ experience: top.requiredExperience }));
     renderResult();
 
     await waitFor(() =>
@@ -160,7 +173,7 @@ describe("リザルト画面", () => {
     await user.click(screen.getByRole("button", { name: "取組をおえる" }));
 
     const summary = screen.getByRole("region", { name: "成績" });
-    expect(summary).toHaveTextContent("大関");
+    expect(summary).toHaveTextContent(top.name);
     expect(summary).not.toHaveTextContent("→");
   });
 

@@ -98,7 +98,9 @@ export function LessonPlayer({
       {completed ? (
         <>
           {notice}
-          <PixelWindow heading="学習おわり">{children}</PixelWindow>
+          <PixelWindow heading="学習おわり">
+            <div className={styles.exits}>{children}</div>
+          </PixelWindow>
         </>
       ) : null}
     </div>

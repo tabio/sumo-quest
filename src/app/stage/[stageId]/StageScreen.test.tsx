@@ -159,6 +159,26 @@ describe("学習画面", () => {
     );
   });
 
+  it("読み終えたあと、取組にもマップにも進める", async () => {
+    const user = userEvent.setup();
+    storeSave();
+    renderStage();
+
+    await waitFor(() =>
+      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+    );
+    await readAll(user);
+
+    expect(screen.getByRole("link", { name: "取組へ" })).toHaveAttribute(
+      "href",
+      "/battle/sumo-stable",
+    );
+    // 稽古のあと、取組へ進まずに戻る道も残す。
+    expect(
+      screen.getByRole("link", { name: "マップへもどる" }),
+    ).toHaveAttribute("href", "/map");
+  });
+
   it("読み終えたら、覚えたものを名前で知らせる", async () => {
     const user = userEvent.setup();
     storeSave();
