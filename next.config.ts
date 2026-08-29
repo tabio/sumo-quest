@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+// 静的エクスポートと basePath の設定は P0-3 で追加する。
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

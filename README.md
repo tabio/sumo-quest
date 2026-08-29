@@ -15,6 +15,20 @@ npm run dev
 
 http://localhost:3000 を開く。
 
+## コマンド
+
+| コマンド | 内容 |
+|---|---|
+| `npm run dev` | 開発サーバーを起動する |
+| `npm run build` | 本番ビルドを作成する |
+| `npm run lint` | ESLintを実行する（警告も失敗として扱う） |
+| `npm run format` | Prettierで整形する |
+| `npm run format:check` | 整形済みかを検査する |
+| `npm run typecheck` | 型検査を実行する |
+| `npm test` | テストを実行する |
+
+ツール選定の理由は [ADR-0002](docs/plans/decisions/0002-lint-format-test-tooling.md) を参照。
+
 ## 技術構成
 
 Next.js（App Router）／React／TypeScript。

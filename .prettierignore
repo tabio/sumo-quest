@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+build/
+coverage/
+package-lock.json
+
+# Markdownは整形対象外とする。
+# 表の桁揃えや折り返しが入ると、docs/ の並行更新で不要な衝突を生むため。
+# 理由は docs/plans/decisions/0002-lint-format-test-tooling.md を参照。
+*.md
