@@ -164,7 +164,7 @@ export function collectContentProblems(bundle: ContentBundle): string[] {
       problems.push(`lesson ${lesson.id}: メッセージが1件もない`);
     }
 
-    if (lesson.messages.some(isBlank)) {
+    if (lesson.messages.some((message) => isBlank(message.text))) {
       problems.push(`lesson ${lesson.id}: 空のメッセージがある`);
     }
 

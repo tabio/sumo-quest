@@ -75,12 +75,46 @@ export type Stage = {
   unlocks?: StageId;
 };
 
+/** 学習に差し込める図の一覧。図の実体は components/learning/figures が持つ。 */
+export const LESSON_FIGURE_IDS = [
+  "dohyo-layout",
+  "mawashi",
+  "lose-conditions",
+  "gyoji-gunbai",
+  "tachiai",
+  "kinjite",
+  "yorikiri",
+  "oshidashi",
+  "hatakikomi",
+  "tsukiotoshi",
+  "uwatenage",
+  "shitatenage",
+  "banzuke-pyramid",
+  "hoshitori",
+  "basho-year",
+  "basho-day",
+] as const;
+
+/**
+ * 図の永続キー。
+ * このキーに対応する図が存在することは、描画側の対応表を
+ * Record<LessonFigureId, ...> にすることで型で保証する（ADR-0008）。
+ */
+export type LessonFigureId = (typeof LESSON_FIGURE_IDS)[number];
+
+/** 学習の1画面分。図を伴う画面と伴わない画面を同じ形で持つ（ADR-0008）。 */
+export type LessonMessage = {
+  text: string;
+  /** この画面に差し込む図。省略した画面は文章だけを出す。 */
+  figureId?: LessonFigureId;
+};
+
 export type Lesson = {
   id: string;
   stageId: StageId;
   speakerId: string;
   /** 1画面1メッセージで表示する。 */
-  messages: string[];
+  messages: LessonMessage[];
   rewardExp: number;
   unlockTechniqueIds?: string[];
   discoverTermIds?: string[];

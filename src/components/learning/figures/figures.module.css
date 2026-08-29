@@ -1,0 +1,156 @@
+/* 学習に差し込む図の見た目（ADR-0008）。
+ * 図はインラインSVGで描く。色はここのクラス経由でトークンを参照し、
+ * SVGの中に色の値を直接書かない（globals.css を色の正とする）。 */
+
+.figure {
+  margin: 0;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface-sunken);
+  box-shadow: var(--shadow-pressed);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto;
+  /* ドット絵と同じく、輪郭を補間せず硬いままにする。 */
+  shape-rendering: crispedges;
+}
+
+.caption {
+  padding-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+  text-align: center;
+}
+
+/* 面。土俵まわりの土と俵。 */
+.clay {
+  fill: var(--color-clay);
+}
+
+.clayDeep {
+  fill: var(--color-accent-deep);
+}
+
+.tawara {
+  fill: var(--color-accent-light);
+}
+
+/* 板。図の中の箱や枠。文字を載せるのはこの面だけとし、
+ * 色つきの面には文字を載せない（コントラストを担保するため）。 */
+.plate {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-border);
+  stroke-width: 2;
+}
+
+.plateAccent {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.plateVerdant {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-verdant-light);
+  stroke-width: 2;
+}
+
+.ground {
+  fill: var(--color-bevel-light);
+}
+
+.line {
+  stroke: var(--color-border-strong);
+  stroke-width: 2;
+  fill: none;
+}
+
+.dashed {
+  stroke: var(--color-border-strong);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+  fill: none;
+}
+
+/* 力士。東西を色で分けるが、向きと配置でも区別できるようにする。 */
+.body {
+  fill: var(--color-text-muted);
+}
+
+.bodyAlt {
+  fill: var(--color-verdant);
+}
+
+.mawashi {
+  fill: var(--color-accent);
+}
+
+.mawashiAlt {
+  fill: var(--color-verdant-deep);
+}
+
+/* 動きを示す矢印。 */
+.arrow {
+  fill: var(--color-accent-light);
+}
+
+.arrowVerdant {
+  fill: var(--color-verdant-light);
+}
+
+/* 禁止を示す印。 */
+.forbidden {
+  stroke: var(--color-danger);
+  stroke-width: 4;
+  fill: none;
+}
+
+/* 白星と黒星。 */
+.win {
+  fill: var(--color-text);
+}
+
+.loss {
+  fill: var(--color-bg-deep);
+  stroke: var(--color-border-strong);
+  stroke-width: 2;
+}
+
+/* 文字。載せる面は surface-sunken か surface-raised に限る。
+ * この組み合わせのコントラストは design-tokens.test.ts で検査している。 */
+.label {
+  fill: var(--color-text);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.labelMuted {
+  fill: var(--color-text-muted);
+  font-family: var(--font-pixel);
+  font-size: 9px;
+}
+
+.labelAccent {
+  fill: var(--color-accent-light);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+/* 土俵の円と俵。 */
+.ring {
+  fill: var(--color-clay);
+  stroke: var(--color-accent-light);
+  stroke-width: 6;
+}
+
+/* 土俵に引かれた白い仕切り線。 */
+.shikiri {
+  fill: var(--color-text);
+}

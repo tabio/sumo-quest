@@ -72,9 +72,9 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
-    expect(screen.queryByText(lesson.messages[1])).not.toBeInTheDocument();
+    expect(screen.queryByText(lesson.messages[1].text)).not.toBeInTheDocument();
   });
 
   it("進捗を表示する", async () => {
@@ -109,12 +109,12 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await user.click(screen.getByRole("button", { name: "つぎへ" }));
     await user.click(screen.getByRole("button", { name: "もどる" }));
 
-    expect(screen.getByText(lesson.messages[0])).toBeInTheDocument();
+    expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument();
   });
 
   it("開いただけでは完了にならない", async () => {
@@ -123,7 +123,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     // 途中まで進めても完了しない。
     await user.click(screen.getByRole("button", { name: "つぎへ" }));
@@ -141,7 +141,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await readAll(user);
 
@@ -165,7 +165,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await readAll(user);
 
@@ -185,7 +185,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await readAll(user);
 
@@ -212,7 +212,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await readAll(user);
 
