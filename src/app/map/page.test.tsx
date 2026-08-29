@@ -1,11 +1,17 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
 import type { PlayerSave } from "@/types/game";
 import MapPage from "./page";
+
+const replace = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace }),
+}));
 
 // 設計書「6.3 ワールドマップ」。
 // P1-9 の完了条件は「現在地・解放済み・クリア済み・未解放が色以外でも区別できる」。
@@ -24,6 +30,7 @@ function renderMap() {
 
 beforeEach(() => {
   window.localStorage.clear();
+  replace.mockClear();
 });
 
 describe("ワールドマップ", () => {
@@ -106,14 +113,13 @@ describe("ワールドマップ", () => {
     ).toBeInTheDocument();
   });
 
-  it("セーブがない場合はタイトルへ案内する", async () => {
+  it("セーブがない場合はタイトルへ戻す", async () => {
     renderMap();
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "記録がありません" }),
-      ).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/"));
+    expect(
+      screen.getByRole("region", { name: "記録がありません" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "タイトルへ" })).toHaveAttribute(
       "href",
       "/",

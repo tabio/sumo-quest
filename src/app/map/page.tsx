@@ -7,13 +7,16 @@ import { WorldMap } from "@/components/game/WorldMap";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { stages } from "@/data/stages";
 import { useGame } from "@/hooks/useGame";
+import { useRouteGuard } from "@/hooks/useRouteGuard";
 import styles from "./page.module.css";
 
 // ワールドマップ画面。設計書「6.3 ワールドマップ」。
 // セーブがない状態で来た場合の扱いは P1-13 のルートガードで入れる。
 
 export default function MapPage() {
-  const { state, isReady, hasSave } = useGame();
+  const { state, isReady } = useGame();
+  // セーブがない状態でマップへ直接来た場合はタイトルへ戻す（設計書「16.」）。
+  const guard = useRouteGuard();
 
   if (!isReady) {
     return (
@@ -25,11 +28,11 @@ export default function MapPage() {
     );
   }
 
-  if (!hasSave) {
+  if (guard.kind === "redirect") {
     return (
       <GameShell title="マップ">
         <PixelWindow heading="記録がありません">
-          <p>タイトルから、はじめから遊んでください。</p>
+          <p>タイトルへもどります。</p>
           <PixelLink href="/" variant="primary">
             タイトルへ
           </PixelLink>

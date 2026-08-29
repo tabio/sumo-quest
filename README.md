@@ -26,6 +26,7 @@ http://localhost:3000 を開く。
 | `npm run format:check` | 整形済みかを検査する |
 | `npm run typecheck` | 型検査を実行する |
 | `npm test` | テストを実行する |
+| `npm run test:e2e` | E2Eテストを実行する（先に `npm run build` が必要） |
 
 ツール選定の理由は [ADR-0002](docs/plans/decisions/0002-lint-format-test-tooling.md) を参照。
 
