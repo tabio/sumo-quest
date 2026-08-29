@@ -2,9 +2,39 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
+  list-style: none;
 }
 
 .notice {
   color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+/* 図鑑・辞典・ステータスは Phase 2 で作る（P2-9〜P2-11）。
+ * それまでは押せない項目として並べ、見た目は PixelButton の無効状態に合わせる。 */
+.menuItem {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--tap-min-size);
+  min-width: var(--tap-min-size);
+  padding: var(--space-2) var(--space-4);
+
+  font-family: var(--font-pixel);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.06em;
+  text-align: center;
+
+  background-color: var(--color-surface);
+  color: var(--color-disabled);
+  border: var(--border-width) solid var(--color-disabled);
+  border-radius: var(--border-radius);
+}
+
+/* 状態を色だけで伝えない（設計書「15.」）。 */
+.menuState {
   font-size: var(--font-size-sm);
 }
