@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { stages } from "@/data/stages";
 import { createSave } from "@/test/fixtures";
 import type { Quiz, Stage } from "@/types/game";
 import {
@@ -94,6 +95,16 @@ describe("isQuizPassed", () => {
     const finalStage: Stage = { ...stage1, passRate: 0.8 };
     expect(isQuizPassed(finalStage, 3, 5)).toBe(false);
     expect(isQuizPassed(finalStage, 4, 5)).toBe(true);
+  });
+
+  it("最終試験の合格率を実データの境界値で確かめる", () => {
+    // P3-2。合格率も問題数もデータ側で決まるため、そこから境界を求める。
+    const finalStage = [...stages].sort((a, b) => b.order - a.order)[0];
+    const total = finalStage.quizIds.length;
+    const border = Math.ceil(total * finalStage.passRate);
+
+    expect(isQuizPassed(finalStage, border, total)).toBe(true);
+    expect(isQuizPassed(finalStage, border - 1, total)).toBe(false);
   });
 });
 

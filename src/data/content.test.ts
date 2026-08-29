@@ -37,16 +37,11 @@ describe("ステージの投入状況", () => {
     expect(stages).toHaveLength(6);
   });
 
-  it("コンテンツが入っているのは STAGE 1〜5", () => {
-    // 最終ステージは Phase 3 で投入する。
-    const withContent = stages.filter((stage) => stage.lessonIds.length > 0);
-    expect(withContent.map((stage) => stage.id)).toEqual([
-      "sumo-stable",
-      "dohyo",
-      "dojo",
-      "banzuke-shrine",
-      "kokugikan",
-    ]);
+  it("全6地点にコンテンツが入っている", () => {
+    const withContent = stages.filter(
+      (stage) => stage.lessonIds.length > 0 && stage.quizIds.length > 0,
+    );
+    expect(withContent).toHaveLength(stages.length);
   });
 
   it("MVPで扱う決まり手が6種類そろっている", () => {
@@ -62,4 +57,49 @@ describe("ステージの投入状況", () => {
       );
     },
   );
+});
+
+describe("最終試験", () => {
+  const finalStage = [...stages].sort((a, b) => b.order - a.order)[0];
+  const finalQuizzes = quizzes.filter((quiz) => quiz.stageId === finalStage.id);
+
+  it("10問ある", () => {
+    expect(finalQuizzes).toHaveLength(10);
+  });
+
+  it("合格率が他のステージより高い", () => {
+    // 設計書「7. ゲーム進行ルール」。最終試験だけ高くする。
+    const others = stages.filter((stage) => stage.id !== finalStage.id);
+    for (const stage of others) {
+      expect(finalStage.passRate).toBeGreaterThan(stage.passRate);
+    }
+  });
+
+  it("全ステージの範囲から出題される", () => {
+    // どのステージの用語・技かは、それを最初に登場させた学習から辿る。
+    const sourceOf = new Map<string, string>();
+    for (const lesson of lessons) {
+      for (const id of [
+        ...(lesson.discoverTermIds ?? []),
+        ...(lesson.unlockTechniqueIds ?? []),
+      ]) {
+        if (!sourceOf.has(id)) sourceOf.set(id, lesson.stageId);
+      }
+    }
+
+    const covered = new Set(
+      finalQuizzes
+        .flatMap((quiz) => [
+          ...(quiz.termIds ?? []),
+          ...(quiz.techniqueId ? [quiz.techniqueId] : []),
+        ])
+        .map((id) => sourceOf.get(id))
+        .filter((stageId): stageId is string => stageId !== undefined),
+    );
+
+    const earlier = stages
+      .filter((stage) => stage.order < finalStage.order)
+      .map((stage) => stage.id);
+    expect([...covered].sort()).toEqual([...earlier].sort());
+  });
 });

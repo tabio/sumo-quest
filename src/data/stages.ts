@@ -94,16 +94,26 @@ export const stages: Stage[] = [
     clearRewardExp: 50,
     unlocks: "yokozuna-castle",
   },
-  // 最終ステージの学習とクイズは Phase 3 で入れる（P3-1〜P3-3）。
-  // 名前とテーマの出典はPRD「7. 学習ステージ」。
+  // 最終試験。全ステージの範囲から出題する（PRD「7. 学習ステージ」STAGE 6）。
   {
     id: "yokozuna-castle",
     order: 6,
     name: "横綱の城",
     theme: "最終試験",
-    npcId: "oyakata",
-    lessonIds: [],
-    quizIds: [],
+    npcId: "yokozuna",
+    lessonIds: ["yokozuna-castle-lesson"],
+    quizIds: [
+      "yokozuna-castle-quiz-1",
+      "yokozuna-castle-quiz-2",
+      "yokozuna-castle-quiz-3",
+      "yokozuna-castle-quiz-4",
+      "yokozuna-castle-quiz-5",
+      "yokozuna-castle-quiz-6",
+      "yokozuna-castle-quiz-7",
+      "yokozuna-castle-quiz-8",
+      "yokozuna-castle-quiz-9",
+      "yokozuna-castle-quiz-10",
+    ],
     // 最終試験だけ合格率が高い（設計書「7. ゲーム進行ルール」）。
     passRate: 0.8,
     clearRewardExp: 100,

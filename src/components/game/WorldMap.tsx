@@ -32,8 +32,11 @@ function pointState(
   isCurrent: boolean,
 ): PointState {
   if (status === undefined || status === "locked") return "locked";
-  if (isCurrent) return "current";
+  // クリア済みは現在地より優先する。
+  // 全ステージをクリアすると最後の地点が現在地になるため、
+  // そうしないと最終試験に勝ったあとも「いまここ」と出てしまう。
   if (status === "cleared") return "cleared";
+  if (isCurrent) return "current";
   return "unlocked";
 }
 

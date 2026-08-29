@@ -73,6 +73,23 @@ describe("ワールドマップ", () => {
     expect(screen.getAllByText(/まだ行けない/)).toHaveLength(4);
   });
 
+  it("すべてクリアすると、最後の地点もクリア済みと出る", async () => {
+    // 全クリア後は最後の地点が現在地になるため、表示の優先順位を確かめる。
+    const cleared = Object.fromEntries(
+      Object.keys(createSave().stageProgress).map((stageId) => [
+        stageId,
+        { status: "cleared", bestScore: 5, attempts: 1 },
+      ]),
+    ) as PlayerSave["stageProgress"];
+    storeSave(createSave({ stageProgress: cleared }));
+    renderMap();
+
+    await waitFor(() =>
+      expect(screen.getAllByText(/クリア済み/)).toHaveLength(6),
+    );
+    expect(screen.queryByText(/いまここ/)).not.toBeInTheDocument();
+  });
+
   it("解放済みのステージへは進める", async () => {
     storeSave(createSave());
     renderMap();

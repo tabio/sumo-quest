@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { lessons } from "@/data/lessons";
-import { stages } from "@/data/stages";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -16,6 +15,19 @@ const replace = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push, replace }),
 }));
+
+// 全ステージにコンテンツが入ったため、中身のないステージは実データに存在しない。
+// それでも防御の分岐は残してあるので、学習の解決だけを差し替えて確かめる。
+const content = vi.hoisted(() => ({ emptyLessons: false }));
+
+vi.mock("@/lib/content", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/content")>();
+  return {
+    ...actual,
+    lessonsOfStage: (stage: Parameters<typeof actual.lessonsOfStage>[0]) =>
+      content.emptyLessons ? [] : actual.lessonsOfStage(stage),
+  };
+});
 
 // 設計書「6.4 学習」。
 // P1-10 の完了条件は「1画面1メッセージ、進捗表示、最後まで進んだ時点で完了」。
@@ -48,6 +60,7 @@ async function readAll(user: ReturnType<typeof userEvent.setup>) {
 }
 
 beforeEach(() => {
+  content.emptyLessons = false;
   window.localStorage.clear();
   push.mockClear();
   replace.mockClear();
@@ -210,17 +223,9 @@ describe("学習画面", () => {
   });
 
   it("中身がないステージでは準備中を出す", async () => {
-    // どのステージが未投入かはコンテンツの追加とともに変わるため、データから引く。
-    const empty = stages.find((stage) => stage.lessonIds.length === 0)!;
-    storeSave(
-      createSave({
-        stageProgress: {
-          ...createSave().stageProgress,
-          [empty.id]: { status: "unlocked", bestScore: 0, attempts: 0 },
-        },
-      }),
-    );
-    renderStage(empty.id);
+    content.emptyLessons = true;
+    storeSave();
+    renderStage();
 
     await waitFor(() =>
       expect(

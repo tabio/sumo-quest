@@ -7,6 +7,7 @@ import {
   currentRank,
   currentStage,
   experienceToNext,
+  isAtHighestRank,
   isLessonCompleted,
   isStageCleared,
   isStageUnlocked,
@@ -35,6 +36,8 @@ export type UseGameValue = GameContextValue & {
   nextRank: Rank | null;
   /** 次の番付までの残りEXP。最上位またはセーブなしでは null。 */
   experienceToNextRank: number | null;
+  /** 最高位（横綱）に到達しているか。 */
+  isTopRank: boolean;
   /** 現在地とみなすステージ。 */
   currentStage: Stage | null;
   /** 技図鑑の完成率（0〜1）。 */
@@ -65,6 +68,7 @@ export function useGame(): UseGameValue {
       rank: save ? currentRank(save) : null,
       nextRank: save ? upcomingRank(save) : null,
       experienceToNextRank: save ? experienceToNext(save) : null,
+      isTopRank: save ? isAtHighestRank(save) : false,
       currentStage: save ? currentStage(save, stages) : null,
       techniqueCollectionRate: save
         ? collectionRate(save.learnedTechniqueIds.length, techniques.length)

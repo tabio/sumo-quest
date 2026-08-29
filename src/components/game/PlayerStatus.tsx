@@ -8,7 +8,7 @@ import styles from "./PlayerStatus.module.css";
  * 設計書「6.3 ワールドマップ」の「プレイヤーの番付とEXPを常時表示」に対応する。
  */
 export function PlayerStatus() {
-  const { state, rank, nextRank, experienceToNextRank } = useGame();
+  const { state, rank, nextRank, experienceToNextRank, isTopRank } = useGame();
   const save = state.save;
   if (!save || !rank) return null;
 
@@ -26,11 +26,14 @@ export function PlayerStatus() {
         <span className={styles.label}>EXP</span>
         <span className={styles.value}>{save.experience}</span>
       </p>
-      {nextRank && experienceToNextRank !== null ? (
-        <p className={styles.next}>
-          つぎの{nextRank.name}まで あと {experienceToNextRank} EXP
-        </p>
-      ) : null}
+      <p className={styles.next}>
+        {nextRank && experienceToNextRank !== null
+          ? `つぎの${nextRank.name}まで あと ${experienceToNextRank} EXP`
+          : // EXPで上がれる番付が尽きても、横綱だけは最終試験で決まる。
+            isTopRank
+            ? "これより上はない"
+            : "横綱は 最終試験に かてば なれる"}
+      </p>
     </div>
   );
 }
