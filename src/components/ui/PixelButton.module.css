@@ -1,0 +1,46 @@
+.button {
+  /* タップ領域は最低44×44px（設計書「15.」）。 */
+  min-height: var(--tap-min-size);
+  min-width: var(--tap-min-size);
+  padding: var(--space-2) var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  font-family: var(--font-pixel);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.06em;
+  text-align: center;
+
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) linear;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.primary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.button:disabled {
+  background-color: var(--color-surface);
+  color: var(--color-disabled);
+  border-color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+/* 選択状態を色だけで伝えない（設計書「15.」）。
+ * 選択中は左側に記号を出し、色覚特性に依存せず区別できるようにする。 */
+.selected::before {
+  content: "▶";
+}
