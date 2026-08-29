@@ -129,27 +129,42 @@ describe("ワールドマップ", () => {
     );
   });
 
-  // 図鑑・辞典・ステータスは Phase 2（P2-9〜P2-11）で作る。
-  // 画面が無いうちにリンクを出すと、押した利用者が404で行き止まりになる。
-  it("図鑑・辞典・ステータスは準備中として押せない状態で並ぶ", async () => {
+  it("できている画面へは進める", async () => {
     storeSave(createSave());
     renderMap();
 
     await waitFor(() =>
-      expect(screen.getByText("わざずかん")).toBeInTheDocument(),
+      expect(
+        screen.getByRole("link", { name: "わざずかん" }),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("link", { name: "わざずかん" })).toHaveAttribute(
+      "href",
+      "/techniques",
+    );
+  });
+
+  // 辞典（P2-10）とステータス（P2-11）はまだ無い。
+  // 画面が無いうちにリンクを出すと、押した利用者が404で行き止まりになる。
+  it("まだ無い画面は準備中として押せない状態で並ぶ", async () => {
+    storeSave(createSave());
+    renderMap();
+
+    await waitFor(() =>
+      expect(screen.getByText("すもうじてん")).toBeInTheDocument(),
     );
 
-    for (const label of ["わざずかん", "すもうじてん", "ステータス"]) {
+    for (const label of ["すもうじてん", "ステータス"]) {
       expect(
         screen.getByText(label).closest("[aria-disabled]"),
       ).toHaveAttribute("aria-disabled", "true");
     }
 
     // 色以外でも準備中だと分かるようにする（設計書「15.」）。
-    expect(screen.getAllByText("準備中")).toHaveLength(3);
+    expect(screen.getAllByText("準備中")).toHaveLength(2);
 
     // 行き先の無いリンクを出さない。
-    for (const href of ["/techniques", "/dictionary", "/status"]) {
+    for (const href of ["/dictionary", "/status"]) {
       expect(document.querySelector(`a[href="${href}"]`)).toBeNull();
     }
   });
