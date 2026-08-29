@@ -179,6 +179,24 @@ describe("学習画面", () => {
     ).toHaveAttribute("href", "/map");
   });
 
+  it("読み終える前でも、やめてタイトルへ戻れる", async () => {
+    const user = userEvent.setup();
+    storeSave();
+    renderStage();
+
+    await waitFor(() =>
+      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: "つぎへ" }));
+    await user.click(screen.getByRole("button", { name: "やめる" }));
+
+    expect(
+      screen.getByRole("link", { name: "タイトルへもどる" }),
+    ).toHaveAttribute("href", "/");
+    // 途中で抜けても学習は完了しない。
+    expect(saved()?.rewardedLessonIds).toEqual([]);
+  });
+
   it("読み終えたら、覚えたものを名前で知らせる", async () => {
     const user = userEvent.setup();
     storeSave();

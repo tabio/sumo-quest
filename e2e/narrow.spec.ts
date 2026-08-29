@@ -71,6 +71,11 @@ test.describe("320px幅での表示", () => {
     await page.getByRole("link", { name: /すもう部屋/ }).click();
     await check(page, "学習");
 
+    // 途中で抜ける導線は、確認を開いた状態でも収まる必要がある（ADR-0008）。
+    await page.getByRole("button", { name: "やめる" }).click();
+    await check(page, "中断の確認");
+    await page.getByRole("button", { name: "つづける" }).click();
+
     for (let i = 0; i < stage1Lesson.messages.length - 1; i += 1) {
       await page.getByRole("button", { name: "つぎへ" }).click();
     }
