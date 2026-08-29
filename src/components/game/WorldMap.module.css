@@ -1,0 +1,62 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.point {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-min-size);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  text-align: left;
+  width: 100%;
+}
+
+/* 状態は色だけでなく、記号と文言でも示す（設計書「15.」）。 */
+.marker {
+  flex-shrink: 0;
+  width: 2.5em;
+  font-family: var(--font-pixel);
+  text-align: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.06em;
+}
+
+.state {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.current {
+  border-color: var(--color-accent);
+}
+
+.cleared .marker {
+  color: var(--color-success);
+}
+
+.locked {
+  background-color: var(--color-bg);
+  border-color: var(--color-disabled);
+  color: var(--color-disabled);
+}
+
+.locked .state {
+  color: var(--color-disabled);
+}

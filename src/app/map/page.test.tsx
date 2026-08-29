@@ -1,0 +1,139 @@
+import { render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it } from "vitest";
+import { GameProvider } from "@/context/GameProvider";
+import { SAVE_KEY } from "@/lib/storage";
+import { toSaveEnvelope } from "@/lib/validation";
+import { createSave } from "@/test/fixtures";
+import type { PlayerSave } from "@/types/game";
+import MapPage from "./page";
+
+// 設計書「6.3 ワールドマップ」。
+// P1-9 の完了条件は「現在地・解放済み・クリア済み・未解放が色以外でも区別できる」。
+
+function storeSave(save: PlayerSave) {
+  window.localStorage.setItem(SAVE_KEY, JSON.stringify(toSaveEnvelope(save)));
+}
+
+function renderMap() {
+  return render(
+    <GameProvider>
+      <MapPage />
+    </GameProvider>,
+  );
+}
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
+describe("ワールドマップ", () => {
+  it("6地点を順番に表示する", async () => {
+    storeSave(createSave());
+    renderMap();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "ワールドマップ" }),
+      ).toBeInTheDocument(),
+    );
+
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(6);
+    expect(items[0]).toHaveTextContent("すもう部屋");
+    expect(items[5]).toHaveTextContent("横綱の城");
+  });
+
+  it("状態を文言でも区別できる", async () => {
+    storeSave(
+      createSave({
+        stageProgress: {
+          ...createSave().stageProgress,
+          "sumo-stable": { status: "cleared", bestScore: 5, attempts: 1 },
+          dohyo: { status: "unlocked", bestScore: 0, attempts: 0 },
+        },
+      }),
+    );
+    renderMap();
+
+    await waitFor(() =>
+      expect(screen.getByText(/クリア済み/)).toBeInTheDocument(),
+    );
+    // 現在地は解放済みで未クリアの最初のステージ。
+    expect(screen.getByText(/いまここ/)).toBeInTheDocument();
+    expect(screen.getAllByText(/まだ行けない/)).toHaveLength(4);
+  });
+
+  it("解放済みのステージへは進める", async () => {
+    storeSave(createSave());
+    renderMap();
+
+    await waitFor(() =>
+      expect(screen.getByRole("link", { name: /すもう部屋/ })).toHaveAttribute(
+        "href",
+        "/stage/sumo-stable",
+      ),
+    );
+  });
+
+  it("未解放のステージは操作できない", async () => {
+    storeSave(createSave());
+    renderMap();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("link", { name: /すもう部屋/ }),
+      ).toBeInTheDocument(),
+    );
+    // リンクになっているのは解放済みの1件だけ。
+    const stageLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href")?.startsWith("/stage/"));
+    expect(stageLinks).toHaveLength(1);
+    expect(
+      screen.getByText("横綱の城").closest("[aria-disabled]"),
+    ).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("番付とEXPを常時表示する", async () => {
+    storeSave(createSave({ playerName: "はなこ", experience: 100 }));
+    renderMap();
+
+    await waitFor(() => expect(screen.getByText("はなこ")).toBeInTheDocument());
+    expect(screen.getByText("序二段")).toBeInTheDocument();
+    expect(screen.getByText("100")).toBeInTheDocument();
+    expect(
+      screen.getByText(/つぎの三段目まで あと 60 EXP/),
+    ).toBeInTheDocument();
+  });
+
+  it("セーブがない場合はタイトルへ案内する", async () => {
+    renderMap();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "記録がありません" }),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("link", { name: "タイトルへ" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+  });
+
+  it("図鑑・辞典・ステータスへの導線がある", async () => {
+    storeSave(createSave());
+    renderMap();
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("link", { name: "わざずかん" }),
+      ).toBeInTheDocument(),
+    );
+    expect(
+      screen.getByRole("link", { name: "すもうじてん" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "ステータス" }),
+    ).toBeInTheDocument();
+  });
+});

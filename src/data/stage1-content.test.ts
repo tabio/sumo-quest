@@ -22,8 +22,27 @@ const lessonIds = ids(lessons);
 const quizIds = ids(quizzes);
 
 describe("ステージ", () => {
-  it("STAGE 1 が定義されている", () => {
-    expect(stages.map((stage) => stage.id)).toEqual(["sumo-stable"]);
+  it("6地点が定義されている", () => {
+    expect(stages).toHaveLength(6);
+  });
+
+  it("order が1から6の連番である", () => {
+    const orders = stages.map((stage) => stage.order).sort((a, b) => a - b);
+    expect(orders).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  it("STAGE 1 から最終ステージまで解放が繋がる", () => {
+    const ordered = [...stages].sort((a, b) => a.order - b.order);
+    for (const [index, stage] of ordered.entries()) {
+      const isLast = index === ordered.length - 1;
+      expect(stage.unlocks).toBe(isLast ? undefined : ordered[index + 1].id);
+    }
+  });
+
+  it("コンテンツが入っているのは STAGE 1 のみ", () => {
+    // STAGE 2以降は Phase 2 と Phase 3 で投入する。
+    const withContent = stages.filter((stage) => stage.lessonIds.length > 0);
+    expect(withContent.map((stage) => stage.id)).toEqual(["sumo-stable"]);
   });
 
   it.each(stages)("$name が参照するNPCが存在する", (stage) => {
