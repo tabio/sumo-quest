@@ -102,3 +102,42 @@ export type QuizAttempt = {
   total: number;
   answeredAt: string;
 };
+
+// 以下の4つは設計書「8. データモデル」に定義がない。
+// 設計書「9. コンテンツデータ」が要求するファイルに対応させるため、ここで補っている。
+// 経緯は docs/plans/decisions/0003-master-data-types.md を参照。
+
+export type Technique = {
+  id: string;
+  /** 決まり手の名称。 */
+  name: string;
+  reading: string;
+  description: string;
+};
+
+export type Term = {
+  id: string;
+  /** 相撲用語。 */
+  name: string;
+  reading: string;
+  description: string;
+};
+
+export type Npc = {
+  id: string;
+  name: string;
+  /** public/images/characters/ 配下の相対パス。解決はパスヘルパーが行う。 */
+  portraitPath: string;
+};
+
+export type Rank = {
+  id: RankId;
+  /** 表示名。例：序ノ口。 */
+  name: string;
+  /** 番付の並び。下位から昇順。 */
+  order: number;
+  /** 昇進に必要な累積EXP。値は設計書「7. ゲーム進行ルール」を正とする。 */
+  requiredExperience: number;
+  /** 横綱のみ true。EXPを満たしても最終試験クリアまで昇進しない。 */
+  requiresFinalExam?: boolean;
+};
