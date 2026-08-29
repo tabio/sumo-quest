@@ -305,4 +305,79 @@ export const quizzes: Quiz[] = [
     rewardExp: 10,
     termIds: ["yokozuna", "makekoshi"],
   },
+  {
+    id: "kokugikan-quiz-1",
+    stageId: "kokugikan",
+    question: "番付が決まる、相撲の公式な試合を何という？",
+    choices: [
+      { id: "a", label: "本場所" },
+      { id: "b", label: "稽古" },
+      { id: "c", label: "取組" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「本場所」。15日間つづく公式の試合だ。稽古は相撲部屋での練習、取組は力士どうしの勝負1回分を指す言葉で、試合そのものの名前ではない。",
+    rewardExp: 10,
+    termIds: ["honbasho"],
+  },
+  {
+    id: "kokugikan-quiz-2",
+    stageId: "kokugikan",
+    question: "本場所は1年に何回ひらかれる？",
+    choices: [
+      { id: "a", label: "6回" },
+      { id: "b", label: "2回" },
+      { id: "c", label: "12回" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「6回」。1月・5月・9月が東京、3月が大阪、7月が名古屋、11月が福岡だ。2回では少なすぎ、12回では毎月になってしまう。",
+    rewardExp: 10,
+    termIds: ["honbasho"],
+  },
+  {
+    id: "kokugikan-quiz-3",
+    stageId: "kokugikan",
+    question: "本場所の最後の日を何という？",
+    choices: [
+      { id: "a", label: "千秋楽" },
+      { id: "b", label: "初日" },
+      { id: "c", label: "結びの一番" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「千秋楽」。最初の日が「初日」だ。結びの一番はその日の最後の取組のことで、15日間どの日にもある。",
+    rewardExp: 10,
+    termIds: ["senshuraku"],
+  },
+  {
+    id: "kokugikan-quiz-4",
+    stageId: "kokugikan",
+    question: "化粧まわしを締めた力士が土俵に上がり、顔ぶれを見せる儀式は？",
+    choices: [
+      { id: "a", label: "土俵入り" },
+      { id: "b", label: "弓取式" },
+      { id: "c", label: "仕切り" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「土俵入り」。弓取式は一日の最後に弓を回して舞う儀式、仕切りは取組の前に相手と呼吸を合わせる時間だ。",
+    rewardExp: 10,
+    termIds: ["dohyoiri", "keshomawashi"],
+  },
+  {
+    id: "kokugikan-quiz-5",
+    stageId: "kokugikan",
+    question: "結びの一番が終わったあとに行われるのは？",
+    choices: [
+      { id: "a", label: "弓取式" },
+      { id: "b", label: "土俵入り" },
+      { id: "c", label: "物言い" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「弓取式」。土俵入りは取組が始まる前に行うもので、順序が逆だ。物言いは判定に疑問があるときだけ起きるもので、決まった時間には行われない。",
+    rewardExp: 10,
+    termIds: ["yumitorishiki", "musubi-no-ichiban"],
+  },
 ];

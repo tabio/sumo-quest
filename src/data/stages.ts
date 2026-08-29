@@ -76,21 +76,26 @@ export const stages: Stage[] = [
     clearRewardExp: 50,
     unlocks: "kokugikan",
   },
-  // STAGE 5以降は地点だけを置き、学習とクイズは P2-7 と Phase 3 で入れる。
-  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
-  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "kokugikan",
     order: 5,
     name: "国技館の町",
     theme: "大相撲を観戦しよう",
     npcId: "oyakata",
-    lessonIds: [],
-    quizIds: [],
+    lessonIds: ["kokugikan-lesson"],
+    quizIds: [
+      "kokugikan-quiz-1",
+      "kokugikan-quiz-2",
+      "kokugikan-quiz-3",
+      "kokugikan-quiz-4",
+      "kokugikan-quiz-5",
+    ],
     passRate: 0.6,
     clearRewardExp: 50,
     unlocks: "yokozuna-castle",
   },
+  // 最終ステージの学習とクイズは Phase 3 で入れる（P3-1〜P3-3）。
+  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "yokozuna-castle",
     order: 6,

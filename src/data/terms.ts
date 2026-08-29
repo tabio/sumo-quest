@@ -137,4 +137,46 @@ export const terms: Term[] = [
     description:
       "番付の最高位。負け越しても番付は下がらないが、勝てなくなれば引退することになる。",
   },
+  {
+    id: "honbasho",
+    name: "本場所",
+    reading: "ほんばしょ",
+    description:
+      "番付が決まる公式の試合。1場所は15日間つづき、1年に6回ひらかれる。",
+  },
+  {
+    id: "senshuraku",
+    name: "千秋楽",
+    reading: "せんしゅうらく",
+    description:
+      "本場所の最後の日のこと。最初の日は「初日」と呼ぶ。優勝が決まるのはたいていこの日だ。",
+  },
+  {
+    id: "dohyoiri",
+    name: "土俵入り",
+    reading: "どひょういり",
+    description:
+      "取組の前に、化粧まわしを締めた力士が土俵に上がって顔ぶれを見せる儀式。横綱だけは、そのあとに一人で行う。",
+  },
+  {
+    id: "keshomawashi",
+    name: "化粧まわし",
+    reading: "けしょうまわし",
+    description:
+      "土俵入りのときだけ締める、刺しゅうの入ったまわし。取組で使うまわしとは別のものだ。",
+  },
+  {
+    id: "musubi-no-ichiban",
+    name: "結びの一番",
+    reading: "むすびのいちばん",
+    description:
+      "その日の最後の取組のこと。ふつうは横綱が務める、一日でいちばん注目される一番だ。",
+  },
+  {
+    id: "yumitorishiki",
+    name: "弓取式",
+    reading: "ゆみとりしき",
+    description:
+      "結びの一番が終わったあと、弓を受け取った力士がそれを回して舞う儀式。これで一日が終わる。",
+  },
 ];
