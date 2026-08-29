@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { quizzes } from "@/data/quizzes";
+import { stages } from "@/data/stages";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -229,16 +230,18 @@ describe("取組画面", () => {
   });
 
   it("問題がないステージでは準備中を出す", async () => {
+    // どのステージが未投入かはコンテンツの追加とともに変わるため、データから引く。
+    const empty = stages.find((stage) => stage.quizIds.length === 0)!;
     storeSave(
       unlockedSave({
         stageProgress: {
           ...createSave().stageProgress,
           "sumo-stable": { status: "cleared", bestScore: 5, attempts: 1 },
-          dohyo: { status: "unlocked", bestScore: 0, attempts: 0 },
+          [empty.id]: { status: "unlocked", bestScore: 0, attempts: 0 },
         },
       }),
     );
-    renderBattle("dohyo");
+    renderBattle(empty.id);
 
     await waitFor(() =>
       expect(
