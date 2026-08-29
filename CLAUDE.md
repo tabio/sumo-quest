@@ -37,3 +37,13 @@ SUMO QUEST — 相撲をレトロRPG風に学ぶ静的Webコンテンツ。
 - 配信は GitHub Pages（リポジトリ配下のサブパス）
 
 `basePath` を前提に、リンクは `next/link`、画像はヘルパー経由で参照する。
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
