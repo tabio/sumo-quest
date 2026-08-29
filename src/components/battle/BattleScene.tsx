@@ -34,7 +34,13 @@ export function BattleScene({ quizzes, onFinish }: BattleSceneProps) {
     setAnsweredChoiceId(choiceId);
     setResults((current) => [
       ...current,
-      { quizId: quiz.id, correct: isCorrectChoice(quiz, choiceId) },
+      {
+        quizId: quiz.id,
+        correct: isCorrectChoice(quiz, choiceId),
+        // 覚えた技と出会った用語は、集計側ではなくデータから渡す（P2-8）。
+        techniqueId: quiz.techniqueId,
+        termIds: quiz.termIds,
+      },
     ]);
   }
 

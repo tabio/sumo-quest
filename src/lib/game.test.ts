@@ -5,6 +5,7 @@ import {
   LESSON_REWARD_EXP,
   QUIZ_CORRECT_REWARD_EXP,
   advanceStatus,
+  applyQuizDiscoveries,
   clearStage,
   completeLesson,
   discoverTerms,
@@ -308,5 +309,56 @@ describe("learnTechniques と discoverTerms", () => {
     expect(discoverTerms(first, ["dohyo"]).discoveredTermIds).toEqual([
       "dohyo",
     ]);
+  });
+});
+
+describe("applyQuizDiscoveries", () => {
+  it("正解した問題の技を習得する", () => {
+    const after = applyQuizDiscoveries(createSave(), [
+      { quizId: "q1", correct: true, techniqueId: "yorikiri" },
+    ]);
+    expect(after.learnedTechniqueIds).toEqual(["yorikiri"]);
+  });
+
+  it("誤答した問題の技は習得しない", () => {
+    const after = applyQuizDiscoveries(createSave(), [
+      { quizId: "q1", correct: false, techniqueId: "yorikiri" },
+    ]);
+    expect(after.learnedTechniqueIds).toEqual([]);
+  });
+
+  it("用語は誤答でも発見する", () => {
+    // 誤答でも解説で説明を読むため、出会った用語として登録する
+    // （PRD「9. コレクション」）。
+    const after = applyQuizDiscoveries(createSave(), [
+      { quizId: "q1", correct: false, termIds: ["dohyo"] },
+    ]);
+    expect(after.discoveredTermIds).toEqual(["dohyo"]);
+  });
+
+  it("すでに覚えているものを重複して持たない", () => {
+    const save = createSave({
+      learnedTechniqueIds: ["yorikiri"],
+      discoveredTermIds: ["dohyo"],
+    });
+    const after = applyQuizDiscoveries(save, [
+      {
+        quizId: "q1",
+        correct: true,
+        techniqueId: "yorikiri",
+        termIds: ["dohyo"],
+      },
+    ]);
+    expect(after.learnedTechniqueIds).toEqual(["yorikiri"]);
+    expect(after.discoveredTermIds).toEqual(["dohyo"]);
+  });
+
+  it("EXPは動かさない", () => {
+    // 加点は recordQuizResults の担当。ここは覚えたものだけを扱う。
+    const save = createSave({ experience: 40 });
+    const after = applyQuizDiscoveries(save, [
+      { quizId: "q1", correct: true, techniqueId: "yorikiri" },
+    ]);
+    expect(after.experience).toBe(40);
   });
 });

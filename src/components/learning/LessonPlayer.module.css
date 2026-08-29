@@ -44,13 +44,3 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
-
-.discovered {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3);
-  border: var(--border-width) solid var(--color-success);
-  color: var(--color-success);
-  font-size: var(--font-size-sm);
-}

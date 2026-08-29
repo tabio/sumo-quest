@@ -146,7 +146,7 @@ describe("学習画面", () => {
     );
   });
 
-  it("読み終えた通知を出す", async () => {
+  it("読み終えたら、覚えたものを名前で知らせる", async () => {
     const user = userEvent.setup();
     storeSave();
     renderStage();
@@ -156,9 +156,37 @@ describe("学習画面", () => {
     );
     await readAll(user);
 
-    expect(await screen.findByRole("status")).toHaveTextContent(
-      "あたらしい ことばと わざを おぼえた。",
+    const status = await screen.findByRole("status");
+    expect(status).toHaveTextContent("あたらしく おぼえた。");
+    // 名前で出す。「おぼえた」だけでは何が増えたのか分からないため。
+    expect(status).toHaveTextContent("寄り切り");
+    expect(status).toHaveTextContent("土俵");
+
+    await user.click(screen.getByRole("button", { name: "とじる" }));
+    expect(
+      screen.queryByRole("region", { name: "おぼえたこと" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("すでに覚えているものは通知しない", async () => {
+    const user = userEvent.setup();
+    storeSave(
+      createSave({
+        learnedTechniqueIds: [...(lesson.unlockTechniqueIds ?? [])],
+        discoveredTermIds: [...(lesson.discoverTermIds ?? [])],
+      }),
     );
+    renderStage();
+
+    await waitFor(() =>
+      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+    );
+    await readAll(user);
+
+    await screen.findByRole("region", { name: "学習おわり" });
+    expect(
+      screen.queryByRole("region", { name: "おぼえたこと" }),
+    ).not.toBeInTheDocument();
   });
 
   it("知らないステージIDではマップへ戻す", async () => {

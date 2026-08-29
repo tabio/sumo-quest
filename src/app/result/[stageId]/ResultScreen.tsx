@@ -1,10 +1,9 @@
 "use client";
 
+import { DiscoveryToast } from "@/components/game/DiscoveryToast";
 import { GameShell } from "@/components/game/GameShell";
 import { PixelWindow } from "@/components/game/PixelWindow";
 import { PixelLink } from "@/components/ui/PixelLink";
-import { techniques } from "@/data/techniques";
-import { terms } from "@/data/terms";
 import { useGame } from "@/hooks/useGame";
 import { useRouteGuard } from "@/hooks/useRouteGuard";
 import { findStage } from "@/lib/content";
@@ -15,14 +14,6 @@ import styles from "./page.module.css";
 // この画面は表示だけを行い、報酬計算も保存も行わない。
 // 計算は取組の終了時点で済んでいる（ADR-0004）。
 // そのため再読み込みしてもEXPは増えない。
-
-function nameOfTechnique(id: string): string {
-  return techniques.find((technique) => technique.id === id)?.name ?? id;
-}
-
-function nameOfTerm(id: string): string {
-  return terms.find((term) => term.id === id)?.name ?? id;
-}
 
 export function ResultScreen({ stageId }: { stageId: string }) {
   const { isReady, state } = useGame();
@@ -118,18 +109,12 @@ export function ResultScreen({ stageId }: { stageId: string }) {
         ) : null}
       </PixelWindow>
 
-      {battle.newTechniqueIds.length > 0 || battle.newTermIds.length > 0 ? (
-        <PixelWindow heading="おぼえたこと">
-          <ul className={styles.list}>
-            {battle.newTechniqueIds.map((id) => (
-              <li key={id}>わざ：{nameOfTechnique(id)}</li>
-            ))}
-            {battle.newTermIds.map((id) => (
-              <li key={id}>ことば：{nameOfTerm(id)}</li>
-            ))}
-          </ul>
-        </PixelWindow>
-      ) : null}
+      {/* この画面は最初から結果が載っているため、読み上げには変化として伝えない。 */}
+      <DiscoveryToast
+        techniqueIds={battle.newTechniqueIds}
+        termIds={battle.newTermIds}
+        announce={false}
+      />
 
       {battle.unlockedStageId ? (
         <PixelWindow heading="あたらしい場所">

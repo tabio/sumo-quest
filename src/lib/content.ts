@@ -2,7 +2,17 @@ import { lessons } from "@/data/lessons";
 import { npcs } from "@/data/npcs";
 import { quizzes } from "@/data/quizzes";
 import { stages } from "@/data/stages";
-import type { Lesson, Npc, Quiz, Stage, StageId } from "@/types/game";
+import { techniques } from "@/data/techniques";
+import { terms } from "@/data/terms";
+import type {
+  Lesson,
+  Npc,
+  Quiz,
+  Stage,
+  StageId,
+  Technique,
+  Term,
+} from "@/types/game";
 
 // コンテンツデータの参照。
 // 画面が data/ を直接 find する処理を各所に書かないよう、ここへ集約する。
@@ -13,6 +23,14 @@ export function findStage(stageId: string): Stage | undefined {
 
 export function findNpc(npcId: string): Npc | undefined {
   return npcs.find((npc) => npc.id === npcId);
+}
+
+export function findTechnique(techniqueId: string): Technique | undefined {
+  return techniques.find((technique) => technique.id === techniqueId);
+}
+
+export function findTerm(termId: string): Term | undefined {
+  return terms.find((term) => term.id === termId);
 }
 
 /** ステージの学習を、ステージデータの並び順で取得する。 */
