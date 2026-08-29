@@ -2,6 +2,8 @@
 
 相撲をレトロRPG風に学ぶ静的Webコンテンツ。
 
+公開URL: https://tabio.github.io/sumo-quest/
+
 - 何を作るか: [docs/sumo-quest-prd.md](docs/sumo-quest-prd.md)
 - どう作るか: [docs/sumo-quest-design.md](docs/sumo-quest-design.md)
 - いつ・どの順序で作るか: [docs/plans/](docs/plans/README.md)
@@ -29,6 +31,13 @@ http://localhost:3000 を開く。
 | `npm run test:e2e` | E2Eテストを実行する（先に `npm run build` が必要） |
 
 ツール選定の理由は [ADR-0002](docs/plans/decisions/0002-lint-format-test-tooling.md) を参照。
+
+## 配信
+
+`main` へのマージで [.github/workflows/deploy.yml](.github/workflows/deploy.yml) が走り、
+ビルド結果（`out/`）が GitHub Pages に配信される。
+
+サブパス（`/sumo-quest`）配下で配信されるため、リンクは `next/link`、画像は `src/lib/imagePath.ts` 経由で参照する。
 
 ## 技術構成
 
