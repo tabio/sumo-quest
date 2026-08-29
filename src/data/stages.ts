@@ -3,7 +3,6 @@ import type { Stage } from "@/types/game";
 // ステージのマスターデータ。
 // 表示順は配列の位置ではなく order を正とする。
 // 合格率とEXPは暫定値であり、Phase 3の通しプレイ（P3-6）で調整する（scope.md）。
-// STAGE 2以降は Phase 2 で追加する。
 export const stages: Stage[] = [
   {
     id: "sumo-stable",
@@ -23,21 +22,27 @@ export const stages: Stage[] = [
     clearRewardExp: 50,
     unlocks: "dohyo",
   },
-  // STAGE 2以降は地点だけを置き、学習とクイズは Phase 2 と Phase 3 で入れる。
-  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
-  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "dohyo",
     order: 2,
     name: "土俵",
     theme: "相撲の基本ルール",
     npcId: "oyakata",
-    lessonIds: [],
-    quizIds: [],
+    lessonIds: ["dohyo-lesson"],
+    quizIds: [
+      "dohyo-quiz-1",
+      "dohyo-quiz-2",
+      "dohyo-quiz-3",
+      "dohyo-quiz-4",
+      "dohyo-quiz-5",
+    ],
     passRate: 0.6,
     clearRewardExp: 50,
     unlocks: "dojo",
   },
+  // STAGE 3以降は地点だけを置き、学習とクイズは P2-5〜P2-7 と Phase 3 で入れる。
+  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
+  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "dojo",
     order: 3,

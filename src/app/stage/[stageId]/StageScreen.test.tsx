@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { lessons } from "@/data/lessons";
+import { stages } from "@/data/stages";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -181,15 +182,17 @@ describe("学習画面", () => {
   });
 
   it("中身がないステージでは準備中を出す", async () => {
+    // どのステージが未投入かはコンテンツの追加とともに変わるため、データから引く。
+    const empty = stages.find((stage) => stage.lessonIds.length === 0)!;
     storeSave(
       createSave({
         stageProgress: {
           ...createSave().stageProgress,
-          dohyo: { status: "unlocked", bestScore: 0, attempts: 0 },
+          [empty.id]: { status: "unlocked", bestScore: 0, attempts: 0 },
         },
       }),
     );
-    renderStage("dohyo");
+    renderStage(empty.id);
 
     await waitFor(() =>
       expect(
