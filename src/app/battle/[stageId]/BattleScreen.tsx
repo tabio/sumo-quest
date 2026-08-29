@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { GameShell } from "@/components/game/GameShell";
 import { PixelWindow } from "@/components/game/PixelWindow";
+import { StageExit } from "@/components/game/StageExit";
 import { BattleScene } from "@/components/battle/BattleScene";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { useGame } from "@/hooks/useGame";
@@ -76,6 +77,9 @@ export function BattleScreen({ stageId }: { stageId: string }) {
 
   return (
     <GameShell title={`${stage.name} の取組`}>
+      {/* 取組の途中でも抜けられるようにする。
+          全問終えるまでリザルトへ移らないため、これが無いと戻る道が無くなる。 */}
+      <StageExit warning="とちゅうでやめた取組は記録されず、つぎは1問目からになります。" />
       <BattleScene quizzes={quizzes} onFinish={finish} />
     </GameShell>
   );

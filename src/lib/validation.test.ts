@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { PLAYER_NAME_MAX_LENGTH } from "@/lib/playerName";
 import { createSave } from "@/test/fixtures";
 import { isPlayerSave, parseSave, toSaveEnvelope } from "./validation";
 
@@ -72,6 +73,23 @@ describe("isPlayerSave", () => {
     };
 
     expect(isPlayerSave(broken)).toBe(false);
+  });
+
+  it("上限ちょうどの名前を受け入れる", () => {
+    const name = "あ".repeat(PLAYER_NAME_MAX_LENGTH);
+    expect(isPlayerSave(createSave({ playerName: name }))).toBe(true);
+  });
+
+  it("上限を超える名前を不正とみなす", () => {
+    // 入力欄を通らずに localStorage を直接書き換えた場合を想定する。
+    const name = "あ".repeat(PLAYER_NAME_MAX_LENGTH + 1);
+    expect(isPlayerSave(createSave({ playerName: name }))).toBe(false);
+  });
+
+  it("名前の長さはサロゲートペアを1文字として数える", () => {
+    // 入力欄が通す絵文字入りの名前を、読み込み側が弾かないこと。
+    const name = "🐣".repeat(PLAYER_NAME_MAX_LENGTH);
+    expect(isPlayerSave(createSave({ playerName: name }))).toBe(true);
   });
 
   it("EXPが数値でない場合を不正とみなす", () => {

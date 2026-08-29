@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DiscoveryToast } from "@/components/game/DiscoveryToast";
 import { GameShell } from "@/components/game/GameShell";
 import { PixelWindow } from "@/components/game/PixelWindow";
+import { StageExit } from "@/components/game/StageExit";
 import { LessonPlayer } from "@/components/learning/LessonPlayer";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { useGame } from "@/hooks/useGame";
@@ -68,6 +69,9 @@ export function StageScreen({ stageId }: { stageId: string }) {
 
   return (
     <GameShell title={stage.name}>
+      {/* 稽古の途中でも抜けられるようにする。
+          最後まで読まないと導線が出ないため、これが無いと戻る道が無くなる。 */}
+      <StageExit warning="よみかけの稽古は、つぎに来たとき はじめからになります。" />
       <LessonPlayer
         lesson={lesson}
         onComplete={() => {
