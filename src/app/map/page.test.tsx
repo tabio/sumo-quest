@@ -132,6 +132,7 @@ describe("ワールドマップ", () => {
   it.each([
     ["わざずかん", "/techniques"],
     ["すもうじてん", "/dictionary"],
+    ["ステータス", "/status"],
   ])("%s へ進める", async (label, href) => {
     storeSave(createSave());
     renderMap();
@@ -145,24 +146,16 @@ describe("ワールドマップ", () => {
     );
   });
 
-  // ステータス画面（P2-11）はまだ無い。
-  // 画面が無いうちにリンクを出すと、押した利用者が404で行き止まりになる。
-  it("まだ無い画面は準備中として押せない状態で並ぶ", async () => {
+  it("行き先の無いリンクを出さない", async () => {
     storeSave(createSave());
     renderMap();
 
     await waitFor(() =>
-      expect(screen.getByText("ステータス")).toBeInTheDocument(),
+      expect(
+        screen.getByRole("link", { name: "ステータス" }),
+      ).toBeInTheDocument(),
     );
-
-    expect(
-      screen.getByText("ステータス").closest("[aria-disabled]"),
-    ).toHaveAttribute("aria-disabled", "true");
-
-    // 色以外でも準備中だと分かるようにする（設計書「15.」）。
-    expect(screen.getAllByText("準備中")).toHaveLength(1);
-
-    // 行き先の無いリンクを出さない。
-    expect(document.querySelector('a[href="/status"]')).toBeNull();
+    // 準備中の項目が残っていないこと。
+    expect(screen.queryByText("準備中")).not.toBeInTheDocument();
   });
 });
