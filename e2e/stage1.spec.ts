@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { lessons } from "../src/data/lessons";
 import { quizzes } from "../src/data/quizzes";
 import { stages } from "../src/data/stages";
+import { resolveBasePath } from "../config/basePath.mjs";
 import { LESSON_REWARD_EXP, QUIZ_CORRECT_REWARD_EXP } from "../src/lib/game";
 
 // E2E 1本目：新規開始 → STAGE 1 クリア。
@@ -274,6 +275,32 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
 
     await page.goto("stage/kokugikan/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+  });
+
+  // GitHub Pages のサブパス配信（testing.md のE2E 6／R-1）。
+  // 画面が描画されている時点でJSとCSSは読めているので、ここでは画像を見る。
+  // 画像の src には basePath が自動で付かないため、壊れるとしたらここになる。
+  test("画像がサブパス配下で読み込める", async ({ page }) => {
+    await page.goto("./");
+    await page.getByRole("link", { name: "はじめから" }).click();
+    await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
+    await page.getByRole("button", { name: "けってい" }).click();
+    await page.getByRole("link", { name: /すもう部屋/ }).click();
+
+    const portrait = page.locator("img").first();
+    await expect(portrait).toBeVisible();
+
+    const loaded = await portrait.evaluate((image: HTMLImageElement) => ({
+      src: image.currentSrc || image.src,
+      naturalWidth: image.naturalWidth,
+    }));
+
+    // 404 のとき naturalWidth は 0 になる。
+    expect(loaded.naturalWidth).toBeGreaterThan(0);
+    // 配信位置と同じ basePath の下を指していること（ローカルでは空文字）。
+    expect(new URL(loaded.src).pathname).toBe(
+      `${resolveBasePath()}/images/characters/placeholder.png`,
+    );
   });
 
   test("保存が壊れていても消さず、案内を出す", async ({ page }) => {
