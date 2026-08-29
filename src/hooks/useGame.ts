@@ -2,6 +2,7 @@
 
 import { useContext, useMemo } from "react";
 import { GameContext, type GameContextValue } from "@/context/GameProvider";
+import { hasClearedFinalStage } from "@/lib/game";
 import {
   collectionRate,
   currentRank,
@@ -38,6 +39,8 @@ export type UseGameValue = GameContextValue & {
   experienceToNextRank: number | null;
   /** 最高位（横綱）に到達しているか。 */
   isTopRank: boolean;
+  /** 最終試験をクリアしているか。エンディングへ進めるかの判断に使う。 */
+  hasFinishedGame: boolean;
   /** 現在地とみなすステージ。 */
   currentStage: Stage | null;
   /** 技図鑑の完成率（0〜1）。 */
@@ -69,6 +72,7 @@ export function useGame(): UseGameValue {
       nextRank: save ? upcomingRank(save) : null,
       experienceToNextRank: save ? experienceToNext(save) : null,
       isTopRank: save ? isAtHighestRank(save) : false,
+      hasFinishedGame: save ? hasClearedFinalStage(save) : false,
       currentStage: save ? currentStage(save, stages) : null,
       techniqueCollectionRate: save
         ? collectionRate(save.learnedTechniqueIds.length, techniques.length)

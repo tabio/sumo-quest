@@ -10,6 +10,7 @@ import type { StageId } from "@/types/game";
 // - 不明なstageId：マップへ戻す
 // - 未解放ステージへの直リンク：マップへ戻す
 // - セーブなしでゲーム画面へ直リンク：タイトルへ戻す
+// - 最終試験をクリアしていない状態でエンディングへ直リンク：マップへ戻す
 //
 // 読み込みが済むまでは判定しない。
 // loading の時点で戻すと、セーブがある利用者まで弾いてしまう。
@@ -17,13 +18,15 @@ import type { StageId } from "@/types/game";
 export type GuardTarget =
   { kind: "allowed" } | { kind: "redirect"; to: string; reason: GuardReason };
 
-export type GuardReason = "noSave" | "unknownStage" | "locked";
+export type GuardReason = "noSave" | "unknownStage" | "locked" | "notFinished";
 
 type GuardOptions = {
   /** ステージを伴う画面で指定する。省略時はセーブの有無だけを見る。 */
   stageId?: string;
   /** ステージが存在するか。呼び出し側がコンテンツを引いて渡す。 */
   stageExists?: boolean;
+  /** 最終試験のクリアを求める画面で指定する。エンディングに使う（P3-4）。 */
+  requireFinalClear?: boolean;
 };
 
 /** 遷移先を決める。副作用を持たないため単体テストできる。 */
@@ -32,6 +35,7 @@ export function resolveGuard(
     isReady: boolean;
     hasSave: boolean;
     isUnlocked: (stageId: StageId) => boolean;
+    hasFinished?: boolean;
   },
   options: GuardOptions,
 ): GuardTarget {
@@ -39,6 +43,10 @@ export function resolveGuard(
 
   if (!params.hasSave) {
     return { kind: "redirect", to: "/", reason: "noSave" };
+  }
+
+  if (options.requireFinalClear && !params.hasFinished) {
+    return { kind: "redirect", to: "/map", reason: "notFinished" };
   }
 
   if (options.stageId === undefined) return { kind: "allowed" };
@@ -60,9 +68,12 @@ export function resolveGuard(
  */
 export function useRouteGuard(options: GuardOptions = {}): GuardTarget {
   const router = useRouter();
-  const { isReady, hasSave, isUnlocked } = useGame();
+  const { isReady, hasSave, isUnlocked, hasFinishedGame } = useGame();
 
-  const target = resolveGuard({ isReady, hasSave, isUnlocked }, options);
+  const target = resolveGuard(
+    { isReady, hasSave, isUnlocked, hasFinished: hasFinishedGame },
+    options,
+  );
   const redirectTo = target.kind === "redirect" ? target.to : null;
 
   useEffect(() => {

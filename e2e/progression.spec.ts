@@ -67,6 +67,17 @@ async function clearStage(page: Page, stageId: string, stageName: string) {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
 }
 
+/** 最終試験のリザルトから、エンディングを見てマップへ戻る。 */
+async function seeEnding(page: Page) {
+  await page.getByRole("link", { name: "エンディングへ" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "エンディング",
+  );
+  await expect(page.getByRole("status")).toContainText("横綱 になった");
+  await page.getByRole("link", { name: "マップへもどる" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+}
+
 test.describe("全ステージの通しプレイ", () => {
   test("順番に解放され、横綱まで到達できる", async ({ page }) => {
     test.slow();
@@ -77,12 +88,24 @@ test.describe("全ステージの通しプレイ", () => {
     await page.getByRole("button", { name: "けってい" }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
 
-    for (const stage of playable) {
+    for (const [index, stage] of playable.entries()) {
       // 順番が来るまで、その地点へは入れない。
       await expect(
         page.getByRole("link", { name: new RegExp(stage.name) }),
       ).toBeVisible();
-      await clearStage(page, stage.id, stage.name);
+
+      const isFinal = index === playable.length - 1;
+      if (isFinal) {
+        // 最終試験のリザルトからだけ、エンディングへ進める（P3-4）。
+        await page.getByRole("link", { name: new RegExp(stage.name) }).click();
+        await readLesson(page, stage.id);
+        await page.getByRole("link", { name: "取組へ" }).click();
+        await answerAllCorrectly(page, stage.id);
+        await expect(page.getByRole("status")).toContainText("かちこし");
+        await seeEnding(page);
+      } else {
+        await clearStage(page, stage.id, stage.name);
+      }
     }
 
     // 中身のある地点がすべてクリア済みになる。

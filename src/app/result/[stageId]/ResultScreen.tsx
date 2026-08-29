@@ -6,7 +6,7 @@ import { PixelWindow } from "@/components/game/PixelWindow";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { useGame } from "@/hooks/useGame";
 import { useRouteGuard } from "@/hooks/useRouteGuard";
-import { findStage } from "@/lib/content";
+import { finalStage, findStage } from "@/lib/content";
 import styles from "./page.module.css";
 
 // リザルト画面。設計書「6.6 リザルト」。
@@ -16,7 +16,7 @@ import styles from "./page.module.css";
 // そのため再読み込みしてもEXPは増えない。
 
 export function ResultScreen({ stageId }: { stageId: string }) {
-  const { isReady, state } = useGame();
+  const { isReady, state, hasFinishedGame } = useGame();
   // セーブなしでリザルトへ直リンクされた場合はタイトルへ戻す（設計書「16.」）。
   const guard = useRouteGuard();
   const battle = state.lastBattle;
@@ -65,6 +65,11 @@ export function ResultScreen({ stageId }: { stageId: string }) {
       </GameShell>
     );
   }
+
+  // 最終試験の結果を見ているときだけエンディングへ誘う。
+  // 全クリア後に前のステージを遊び直しても、そこからは出さない。
+  const finished =
+    battle.passed && battle.stageId === finalStage().id && hasFinishedGame;
 
   return (
     <GameShell title={`${battle.stageName} の けっか`}>
@@ -127,7 +132,13 @@ export function ResultScreen({ stageId }: { stageId: string }) {
 
       <PixelWindow>
         <div className={styles.actions}>
-          <PixelLink href="/map" variant="primary">
+          {/* 最終試験に勝った直後だけ、エンディングを主要な導線にする（P3-4）。 */}
+          {finished ? (
+            <PixelLink href="/ending" variant="primary">
+              エンディングへ
+            </PixelLink>
+          ) : null}
+          <PixelLink href="/map" variant={finished ? "default" : "primary"}>
             マップへもどる
           </PixelLink>
           {battle.passed ? null : (
