@@ -230,4 +230,79 @@ export const quizzes: Quiz[] = [
     rewardExp: 10,
     techniqueId: "hatakikomi",
   },
+  {
+    id: "banzuke-shrine-quiz-1",
+    stageId: "banzuke-shrine",
+    question: "力士の順位を示す表を何という？",
+    choices: [
+      { id: "a", label: "番付" },
+      { id: "b", label: "決まり手" },
+      { id: "c", label: "軍配" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「番付」。本場所ごとに作り直される。決まり手は勝負が決まったときの技の名前、軍配は行司が持つ道具だ。",
+    rewardExp: 10,
+    termIds: ["banzuke"],
+  },
+  {
+    id: "banzuke-shrine-quiz-2",
+    stageId: "banzuke-shrine",
+    question: "番付でいちばん上の位はどれ？",
+    choices: [
+      { id: "a", label: "横綱" },
+      { id: "b", label: "大関" },
+      { id: "c", label: "関脇" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「横綱」。上から横綱、大関、関脇、小結、前頭の順に並ぶ。大関と関脇はどちらも上位だが、横綱の下にあたる。",
+    rewardExp: 10,
+    termIds: ["yokozuna"],
+  },
+  {
+    id: "banzuke-shrine-quiz-3",
+    stageId: "banzuke-shrine",
+    question: "十両より上の番付の力士を、まとめて何と呼ぶ？",
+    choices: [
+      { id: "a", label: "関取" },
+      { id: "b", label: "親方" },
+      { id: "c", label: "行司" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「関取」。給料が出て、付け人もつく。親方は力士を指導する人、行司は取組をさばく人で、どちらも番付の位の名前ではない。",
+    rewardExp: 10,
+    termIds: ["sekitori"],
+  },
+  {
+    id: "banzuke-shrine-quiz-4",
+    stageId: "banzuke-shrine",
+    question: "15日間の本場所で、関取が「勝ち越し」になるのは何勝から？",
+    choices: [
+      { id: "a", label: "8勝" },
+      { id: "b", label: "5勝" },
+      { id: "c", label: "12勝" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「8勝」。15日のうち8勝すれば、負けの数より勝ちの数が多くなる。5勝では負け越しで、12勝は勝ち越しだが、境目は8勝だ。",
+    rewardExp: 10,
+    termIds: ["kachikoshi", "makekoshi"],
+  },
+  {
+    id: "banzuke-shrine-quiz-5",
+    stageId: "banzuke-shrine",
+    question: "負け越しても番付が下がらないのは、どの位？",
+    choices: [
+      { id: "a", label: "横綱" },
+      { id: "b", label: "大関" },
+      { id: "c", label: "関脇" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「横綱」。そのかわり、勝てなくなれば引退することになる。大関は負け越してもすぐには落ちないが、次の場所でも負け越すと関脇に下がる。関脇は負け越せばそのまま下がる。",
+    rewardExp: 10,
+    termIds: ["yokozuna", "makekoshi"],
+  },
 ];

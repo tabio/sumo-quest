@@ -58,21 +58,27 @@ export const stages: Stage[] = [
     clearRewardExp: 50,
     unlocks: "banzuke-shrine",
   },
-  // STAGE 4以降は地点だけを置き、学習とクイズは P2-6・P2-7 と Phase 3 で入れる。
-  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
-  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "banzuke-shrine",
     order: 4,
     name: "ばんづけ神社",
     theme: "番付",
     npcId: "oyakata",
-    lessonIds: [],
-    quizIds: [],
+    lessonIds: ["banzuke-shrine-lesson"],
+    quizIds: [
+      "banzuke-shrine-quiz-1",
+      "banzuke-shrine-quiz-2",
+      "banzuke-shrine-quiz-3",
+      "banzuke-shrine-quiz-4",
+      "banzuke-shrine-quiz-5",
+    ],
     passRate: 0.6,
     clearRewardExp: 50,
     unlocks: "kokugikan",
   },
+  // STAGE 5以降は地点だけを置き、学習とクイズは P2-7 と Phase 3 で入れる。
+  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
+  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "kokugikan",
     order: 5,
