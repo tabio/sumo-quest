@@ -6,7 +6,8 @@ import { SAVE_KEY } from "@/lib/storage";
 import NewGamePage from "./page";
 
 // 設計書「6.2 名前入力」。
-// P1-8 の完了条件は「1〜12文字、前後空白除去、空文字不可。決定で初期セーブ生成」。
+// P1-8 の完了条件は「前後空白除去、空文字不可。決定で初期セーブ生成」。
+// 文字数上限は ADR-0008 で10文字とした。
 
 const push = vi.fn();
 
@@ -78,27 +79,27 @@ describe("名前入力画面", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
-  it("13文字以上では決定できない", async () => {
+  it("11文字以上では決定できない", async () => {
     const user = userEvent.setup();
     renderPage();
 
     await user.type(
       screen.getByLabelText("あなたのしこ名は？"),
-      "あ".repeat(13),
+      "あ".repeat(11),
     );
     await user.click(screen.getByRole("button", { name: "けってい" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "なまえは12文字までです。",
+      "なまえは10文字までです。",
     );
     expect(push).not.toHaveBeenCalled();
   });
 
-  it("12文字ちょうどは決定できる", async () => {
+  it("10文字ちょうどは決定できる", async () => {
     const user = userEvent.setup();
     renderPage();
 
-    const name = "あ".repeat(12);
+    const name = "あ".repeat(10);
     await user.type(screen.getByLabelText("あなたのしこ名は？"), name);
     await user.click(screen.getByRole("button", { name: "けってい" }));
 

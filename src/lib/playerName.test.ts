@@ -50,7 +50,7 @@ describe("validatePlayerName", () => {
   });
 
   it("サロゲートペアを1文字として数える", () => {
-    // 見た目12文字ぶんの絵文字。UTF-16の長さでは24になる。
+    // 見た目で上限ちょうどぶんの絵文字。UTF-16の長さでは倍になる。
     const name = "🐣".repeat(PLAYER_NAME_MAX_LENGTH);
     expect(validatePlayerName(name)).toEqual({ ok: true, name });
     expect(validatePlayerName(`${name}🐣`)).toEqual({

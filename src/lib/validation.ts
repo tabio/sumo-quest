@@ -1,3 +1,4 @@
+import { PLAYER_NAME_MAX_LENGTH } from "@/lib/playerName";
 import {
   RANK_IDS,
   STAGE_IDS,
@@ -58,6 +59,22 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+/**
+ * プレイヤー名として保存を許す範囲か。
+ *
+ * 入力欄（lib/playerName.ts）と同じ上限をここでも見る。
+ * 検証しないと、localStorage を直接書き換えた任意長の名前がそのまま読み込まれ、
+ * 入力側が守っている不変条件が保存側で崩れる。
+ *
+ * 数え方も入力側に合わせ、サロゲートペアを1文字として数える。
+ * UTF-16の長さで数えると、入力欄を通った絵文字入りの名前を読み込めなくなる。
+ */
+function isPlayerName(value: unknown): value is string {
+  return (
+    typeof value === "string" && [...value].length <= PLAYER_NAME_MAX_LENGTH
+  );
+}
+
 function isStageProgress(value: unknown): value is StageProgress {
   if (!isRecord(value)) return false;
   if (!STAGE_STATUSES.includes(value.status as StageStatus)) return false;
@@ -92,7 +109,7 @@ function isQuizHistory(value: unknown): value is PlayerSave["quizHistory"] {
 export function isPlayerSave(value: unknown): value is PlayerSave {
   if (!isRecord(value)) return false;
   if (value.version !== SAVE_VERSION) return false;
-  if (typeof value.playerName !== "string") return false;
+  if (!isPlayerName(value.playerName)) return false;
   if (!isFiniteNumber(value.experience)) return false;
   if (!RANK_IDS.includes(value.rankId as RankId)) return false;
   if (!isStageProgressMap(value.stageProgress)) return false;

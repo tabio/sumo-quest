@@ -1,10 +1,12 @@
 // プレイヤー名の検証。
-// 設計書「6.2 名前入力」の規則を実装する。
+// 設計書「6.2 名前入力」の規則を実装する。ただし文字数上限は ADR-0008 が正とする。
 //
 // 画面から切り離しておくことで、境界値を単体テストで確かめられる。
 
 export const PLAYER_NAME_MIN_LENGTH = 1;
-export const PLAYER_NAME_MAX_LENGTH = 12;
+// 上限は ADR-0008 で12から10に変更した。
+// 入力欄と保存検証の双方がこの値を参照する。二重管理にすると片方だけ動かせてしまう。
+export const PLAYER_NAME_MAX_LENGTH = 10;
 
 export type PlayerNameError = "empty" | "tooLong";
 
