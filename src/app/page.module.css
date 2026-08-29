@@ -1,24 +1,35 @@
-.actions {
+.logo {
+  font-family: var(--font-pixel);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.menu {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-3);
 }
 
-.note {
+.notice {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
 
-.talk {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
+.warning {
+  color: var(--color-danger);
 }
 
-.portrait {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  border: var(--border-width) solid var(--color-border);
-  background-color: var(--color-bg);
+.confirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }

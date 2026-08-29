@@ -1,0 +1,10 @@
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.notice {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
