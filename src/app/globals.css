@@ -1,5 +1,64 @@
-/* 最小限のリセットのみを置く。 */
-/* 色・余白・フォントのデザイントークンは P0-7 で定義する。 */
+/* デザイントークン。
+ * 色・余白・フォントの値はここを正とし、コンポーネント側で直接色を書かない。
+ * 方針の出典はPRD「13. デザイン方針」と設計書「15. レスポンシブ・アクセシビリティ」。
+ */
+
+:root {
+  /* 色。PRDの「限定した色数」に従い、用途ごとに1つずつ持つ。
+   * 文字色と背景色の組み合わせは design-tokens.test.ts でコントラスト比を検査する。 */
+  --color-bg: #10162c;
+  --color-surface: #1e2748;
+  --color-surface-raised: #33406e;
+  --color-border: #f2eede;
+  --color-text: #f2eede;
+  --color-text-muted: #b9c2de;
+  --color-accent: #f0b429;
+  --color-accent-text: #10162c;
+  --color-clay: #b4622c;
+  --color-success: #7ad07f;
+  --color-danger: #ff8a7a;
+  --color-disabled: #6b74a0;
+
+  /* 余白。4pxのピクセルグリッドに揃える。 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* 枠線。ドット絵の見た目を保つため角丸は持たない。 */
+  --border-width: 4px;
+  --border-radius: 0;
+
+  /* フォント。
+   * ピクセルフォントは本文の可読性を損なうため、見出しと数値に限って使う。
+   * 本文には可読性の高いフォントを充てる（設計書「15.」）。
+   * ピクセル用のWebフォントはレーンDの素材と合わせて選定し、ここに追加する。 */
+  --font-pixel:
+    "DotGothic16", "PixelMplus12", "Courier New", ui-monospace, monospace;
+  --font-body:
+    system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    sans-serif;
+
+  --font-size-sm: 12px;
+  --font-size-base: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+  --line-height-body: 1.7;
+  --line-height-tight: 1.3;
+
+  /* 操作領域。タップ領域は最低44×44px（設計書「15.」）。 */
+  --tap-min-size: 44px;
+
+  /* 画面幅。基準は320px以上。 */
+  --content-max-width: 640px;
+
+  /* 動き。控えめなドットアニメーションに留める。 */
+  --duration-fast: 80ms;
+  --duration-base: 160ms;
+}
 
 *,
 *::before,
@@ -24,11 +83,40 @@ body {
 
 body {
   min-height: 100%;
-  font-family: system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ドット絵を拡大しても補間でぼやけないようにする。 */
+img {
+  image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
+}
+
+/* フォーカスリングを必ず見えるようにする（設計書「15.」）。 */
+:focus-visible {
+  outline: var(--border-width) solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* アニメーション軽減設定を尊重する（設計書「15.」）。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
