@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { SAVE_KEY } from "@/lib/storage";
@@ -44,7 +44,10 @@ describe("ワールドマップ", () => {
       ).toBeInTheDocument(),
     );
 
-    const items = screen.getAllByRole("listitem");
+    // 一覧はマップ以外にもあるため、ワールドマップの中だけを数える。
+    const items = within(
+      screen.getByRole("region", { name: "ワールドマップ" }),
+    ).getAllByRole("listitem");
     expect(items).toHaveLength(6);
     expect(items[0]).toHaveTextContent("すもう部屋");
     expect(items[5]).toHaveTextContent("横綱の城");
@@ -126,20 +129,28 @@ describe("ワールドマップ", () => {
     );
   });
 
-  it("図鑑・辞典・ステータスへの導線がある", async () => {
+  // 図鑑・辞典・ステータスは Phase 2（P2-9〜P2-11）で作る。
+  // 画面が無いうちにリンクを出すと、押した利用者が404で行き止まりになる。
+  it("図鑑・辞典・ステータスは準備中として押せない状態で並ぶ", async () => {
     storeSave(createSave());
     renderMap();
 
     await waitFor(() =>
-      expect(
-        screen.getByRole("link", { name: "わざずかん" }),
-      ).toBeInTheDocument(),
+      expect(screen.getByText("わざずかん")).toBeInTheDocument(),
     );
-    expect(
-      screen.getByRole("link", { name: "すもうじてん" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "ステータス" }),
-    ).toBeInTheDocument();
+
+    for (const label of ["わざずかん", "すもうじてん", "ステータス"]) {
+      expect(
+        screen.getByText(label).closest("[aria-disabled]"),
+      ).toHaveAttribute("aria-disabled", "true");
+    }
+
+    // 色以外でも準備中だと分かるようにする（設計書「15.」）。
+    expect(screen.getAllByText("準備中")).toHaveLength(3);
+
+    // 行き先の無いリンクを出さない。
+    for (const href of ["/techniques", "/dictionary", "/status"]) {
+      expect(document.querySelector(`a[href="${href}"]`)).toBeNull();
+    }
   });
 });
