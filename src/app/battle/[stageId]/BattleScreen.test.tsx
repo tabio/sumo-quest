@@ -168,6 +168,28 @@ describe("取組画面", () => {
     }
   });
 
+  it("全問終える前でも、やめてタイトルへ戻れる", async () => {
+    const user = userEvent.setup();
+    storeSave();
+    renderBattle();
+
+    const quiz = stage1Quizzes[0];
+    await waitFor(() =>
+      expect(screen.getByText(quiz.question)).toBeInTheDocument(),
+    );
+    await user.click(
+      screen.getByRole("button", { name: quiz.choices[0].label }),
+    );
+    await user.click(screen.getByRole("button", { name: "やめる" }));
+
+    expect(
+      screen.getByRole("link", { name: "タイトルへもどる" }),
+    ).toHaveAttribute("href", "/");
+    // 途中で抜けた取組は成績にも報酬にも反映しない。
+    expect(saved()?.experience).toBe(0);
+    expect(saved()?.stageProgress["sumo-stable"].attempts).toBe(0);
+  });
+
   it("全問正解でクリアし、次のステージが解放される", async () => {
     const user = userEvent.setup();
     storeSave();
