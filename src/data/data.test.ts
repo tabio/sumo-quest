@@ -9,7 +9,8 @@ import { terms } from "./terms";
 
 // 設計書「9. コンテンツデータ」が求める7ファイルの疎通確認。
 // 中身が空のうちは緩い検査だが、データ投入後もそのまま効き続ける。
-// 内容の妥当性（正解が一つだけあること、参照先IDの存在）の検証は P2-12 で扱う。
+// 内容の妥当性（正解が一つだけあること、参照先IDの存在）は
+// src/lib/contentIntegrity.ts が見る（P2-12）。
 const dataSets = [
   { name: "stages", items: stages },
   { name: "lessons", items: lessons },
