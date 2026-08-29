@@ -195,7 +195,8 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
       stage1.clearRewardExp;
 
     await page.getByRole("link", { name: "マップへもどる" }).click();
-    await expect(page.getByText(String(total))).toBeVisible();
+    // 同じ数字が「つぎの番付まであとNEXP」にも出るため、EXPの値だけを見る。
+    await expect(page.getByText(String(total), { exact: true })).toBeVisible();
   });
 
   // 学習を通らずに取組へ入る経路。ルートガードは解放済みなら通す。

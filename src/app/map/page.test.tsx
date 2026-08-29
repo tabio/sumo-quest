@@ -1,6 +1,11 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
+import {
+  experienceToNextRank,
+  nextRank,
+  rankFromExperience,
+} from "@/lib/ranks";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -126,10 +131,13 @@ describe("ワールドマップ", () => {
     renderMap();
 
     await waitFor(() => expect(screen.getByText("はなこ")).toBeInTheDocument());
-    expect(screen.getByText("序二段")).toBeInTheDocument();
+    expect(screen.getByText(rankFromExperience(100).name)).toBeInTheDocument();
     expect(screen.getByText("100")).toBeInTheDocument();
+    // 番付の境目はデータ側で調整されるため、期待値もそこから導く。
     expect(
-      screen.getByText(/つぎの三段目まで あと 60 EXP/),
+      screen.getByText(
+        `つぎの${nextRank(100)!.name}まで あと ${experienceToNextRank(100)} EXP`,
+      ),
     ).toBeInTheDocument();
   });
 

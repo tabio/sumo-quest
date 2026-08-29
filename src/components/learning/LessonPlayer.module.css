@@ -44,3 +44,9 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
+
+.exits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

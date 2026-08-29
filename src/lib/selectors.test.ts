@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ranks } from "@/data/ranks";
 import { createSave } from "@/test/fixtures";
 import type { PlayerSave, Stage } from "@/types/game";
 import {
@@ -55,7 +56,14 @@ function withProgress(
 
 describe("currentRank", () => {
   it("EXPから番付を導出する", () => {
-    expect(currentRank(createSave({ experience: 160 })).id).toBe("sandanme");
+    // 必要EXPはデータ側で調整されるため、境目そのものをデータから引く。
+    for (const rank of ranks.filter(
+      (candidate) => !candidate.requiresFinalExam,
+    )) {
+      expect(
+        currentRank(createSave({ experience: rank.requiredExperience })).id,
+      ).toBe(rank.id);
+    }
   });
 
   it("保存されている番付が食い違ってもEXPを正とする", () => {
@@ -73,8 +81,11 @@ describe("currentRank", () => {
 
 describe("次の番付", () => {
   it("残りEXPを返す", () => {
-    expect(experienceToNext(createSave({ experience: 30 }))).toBe(50);
-    expect(upcomingRank(createSave({ experience: 30 }))?.id).toBe("jonidan");
+    const second = ranks.find((rank) => rank.order === 2)!;
+    const experience = second.requiredExperience - 10;
+
+    expect(experienceToNext(createSave({ experience }))).toBe(10);
+    expect(upcomingRank(createSave({ experience }))?.id).toBe(second.id);
   });
 
   it("EXPで到達できる最上位では null", () => {

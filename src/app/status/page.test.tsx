@@ -4,6 +4,11 @@ import { GameProvider } from "@/context/GameProvider";
 import { stages } from "@/data/stages";
 import { techniques } from "@/data/techniques";
 import { terms } from "@/data/terms";
+import {
+  experienceToNextRank,
+  nextRank,
+  rankFromExperience,
+} from "@/lib/ranks";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -44,9 +49,14 @@ describe("ステータス画面", () => {
     await waitFor(() =>
       expect(screen.getByText("ちからまる")).toBeInTheDocument(),
     );
-    expect(screen.getByText("序二段")).toBeInTheDocument();
+    expect(screen.getByText(rankFromExperience(100).name)).toBeInTheDocument();
     expect(screen.getByText("100")).toBeInTheDocument();
-    expect(screen.getByText(/三段目 まで あと 60 EXP/)).toBeInTheDocument();
+    // 番付の境目はデータ側で調整されるため、期待値もそこから導く。
+    expect(
+      screen.getByText(
+        `${nextRank(100)!.name} まで あと ${experienceToNextRank(100)} EXP`,
+      ),
+    ).toBeInTheDocument();
   });
 
   it("集めたものの数を出す", async () => {
