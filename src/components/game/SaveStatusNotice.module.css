@@ -1,0 +1,8 @@
+/* 色だけに頼らず、枠と文言でも異常だと分かるようにする（設計書「15.」）。 */
+.notice {
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-danger);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+}

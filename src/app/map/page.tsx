@@ -24,7 +24,7 @@ const MENU: { label: string; href?: string }[] = [
 ];
 
 export default function MapPage() {
-  const { state, isReady } = useGame();
+  const { isReady } = useGame();
   // セーブがない状態でマップへ直接来た場合はタイトルへ戻す（設計書「16.」）。
   const guard = useRouteGuard();
 
@@ -55,11 +55,6 @@ export default function MapPage() {
     <GameShell title="マップ">
       <PixelWindow>
         <PlayerStatus />
-        {state.saveFailed ? (
-          <p className={styles.notice} role="status">
-            進行を保存できませんでした。閉じると記録が失われます。
-          </p>
-        ) : null}
       </PixelWindow>
 
       <WorldMap stages={stages} />
