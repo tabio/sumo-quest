@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { lessons } from "@/data/lessons";
 import { SAVE_KEY } from "@/lib/storage";
@@ -8,6 +8,13 @@ import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
 import type { PlayerSave } from "@/types/game";
 import { StageScreen } from "./StageScreen";
+
+const push = vi.fn();
+const replace = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push, replace }),
+}));
 
 // 設計書「6.4 学習」。
 // P1-10 の完了条件は「1画面1メッセージ、進捗表示、最後まで進んだ時点で完了」。
@@ -41,6 +48,8 @@ async function readAll(user: ReturnType<typeof userEvent.setup>) {
 
 beforeEach(() => {
   window.localStorage.clear();
+  push.mockClear();
+  replace.mockClear();
 });
 
 describe("学習画面", () => {
@@ -151,26 +160,24 @@ describe("学習画面", () => {
     );
   });
 
-  it("知らないステージIDでは案内を出す", async () => {
+  it("知らないステージIDではマップへ戻す", async () => {
     storeSave();
     renderStage("unknown-stage");
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "ステージが見つかりません" }),
-      ).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/map"));
+    expect(
+      screen.getByRole("region", { name: "その場所はありません" }),
+    ).toBeInTheDocument();
   });
 
-  it("未解放のステージでは入れない", async () => {
+  it("未解放のステージへの直リンクはマップへ戻す", async () => {
     storeSave();
     renderStage("dohyo");
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "まだ行けません" }),
-      ).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/map"));
+    expect(
+      screen.getByRole("region", { name: "まだ行けません" }),
+    ).toBeInTheDocument();
   });
 
   it("中身がないステージでは準備中を出す", async () => {
@@ -191,13 +198,12 @@ describe("学習画面", () => {
     );
   });
 
-  it("セーブがない場合はタイトルへ案内する", async () => {
+  it("セーブがない場合はタイトルへ戻す", async () => {
     renderStage();
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "記録がありません" }),
-      ).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/"));
+    expect(
+      screen.getByRole("region", { name: "記録がありません" }),
+    ).toBeInTheDocument();
   });
 });
