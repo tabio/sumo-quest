@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PixelWindow } from "@/components/game/PixelWindow";
 import { PixelButton } from "@/components/ui/PixelButton";
 import { isCorrectChoice, type QuizResult } from "@/lib/game";
+import { shuffleQuizChoices } from "@/lib/shuffle";
 import type { Quiz } from "@/types/game";
 import styles from "./BattleScene.module.css";
 
@@ -11,6 +12,9 @@ import styles from "./BattleScene.module.css";
 //
 // 1問ずつ回答し、回答後に正誤と解説を出す。
 // 全問終えたら結果を onFinish で返す。合否の判定と保存は呼び出し側が行う。
+//
+// 選択肢の並びは取組の開始時に一度だけランダムにする（ADR-0010）。
+// マスターデータの並びのままでは、正解が常に先頭になり位置で答えられてしまう。
 
 type BattleSceneProps = {
   quizzes: Quiz[];
@@ -18,12 +22,18 @@ type BattleSceneProps = {
 };
 
 export function BattleScene({ quizzes, onFinish }: BattleSceneProps) {
+  // 並べ替えは初期化時の1回だけ行う。
+  // 描画のたびに並べ替えると、回答した直後に選択肢が入れ替わってしまう。
+  const [shuffled] = useState(() =>
+    quizzes.map((item) => shuffleQuizChoices(item)),
+  );
+
   const [index, setIndex] = useState(0);
   const [answeredChoiceId, setAnsweredChoiceId] = useState<string | null>(null);
   const [results, setResults] = useState<QuizResult[]>([]);
 
-  const quiz = quizzes[index];
-  const total = quizzes.length;
+  const quiz = shuffled[index];
+  const total = shuffled.length;
   const isLast = index === total - 1;
   const correct =
     answeredChoiceId !== null && isCorrectChoice(quiz, answeredChoiceId);
