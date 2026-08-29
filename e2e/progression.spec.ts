@@ -7,11 +7,11 @@ import { terms } from "../src/data/terms";
 import { LESSON_REWARD_EXP, QUIZ_CORRECT_REWARD_EXP } from "../src/lib/game";
 import { ranks } from "../src/data/ranks";
 
-// Phase 2 の完了ゲート「STAGE 1〜5が順番に解放され、通しでプレイできる」。
+// 全ステージの通しプレイ。
 //
-// testing.md のE2E 3（全6ステージと横綱到達）は Phase 3〜4 の範囲だが、
-// 5ステージ分の解放の連鎖はこのフェーズで成立していなければならない。
-// 汎用化した画面が、データを足しただけのステージでも動くことの確認でもある。
+// Phase 2 の完了ゲート「STAGE 1〜5が順番に解放され、通しでプレイできる」と、
+// Phase 3 の完了ゲート「新規開始から横綱到達まで、通しでプレイできる」を兼ねる。
+// 対象はコンテンツが入っているステージすべてで、データから決める。
 //
 // goto に渡すパスは baseURL からの相対で書く（playwright.config.ts）。
 
@@ -67,8 +67,8 @@ async function clearStage(page: Page, stageId: string, stageName: string) {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
 }
 
-test.describe("STAGE 1〜5の通しプレイ", () => {
-  test("順番に解放され、図鑑と辞典が進行に追いつく", async ({ page }) => {
+test.describe("全ステージの通しプレイ", () => {
+  test("順番に解放され、横綱まで到達できる", async ({ page }) => {
     test.slow();
 
     await page.goto("./");
@@ -85,9 +85,8 @@ test.describe("STAGE 1〜5の通しプレイ", () => {
       await clearStage(page, stage.id, stage.name);
     }
 
-    // 5地点すべてがクリア済みになり、最後の地点が解放される。
+    // 中身のある地点がすべてクリア済みになる。
     await expect(page.getByText("クリア済み")).toHaveCount(playable.length);
-    await expect(page.getByRole("link", { name: /横綱の城/ })).toBeVisible();
 
     // EXPは、学習・正解・クリアの合計になる。
     const expected = playable.reduce(
@@ -102,6 +101,9 @@ test.describe("STAGE 1〜5の通しプレイ", () => {
 
     // 図鑑：学習で6種すべてを覚えている。
     await page.getByRole("link", { name: "わざずかん" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "わざずかん",
+    );
     await expect(
       page.getByText(`${techniques.length} のうち ${techniques.length}`),
     ).toBeVisible();
@@ -110,21 +112,28 @@ test.describe("STAGE 1〜5の通しプレイ", () => {
 
     // 辞典：STAGE 1〜5 で出会う用語がすべて載る。
     await page.getByRole("link", { name: "すもうじてん" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "すもうじてん",
+    );
     await expect(
       page.getByText(`${terms.length} のことばに出会った`),
     ).toBeVisible();
     await page.getByRole("link", { name: "マップへもどる" }).click();
 
-    // ステータス：番付がEXPどおりに上がっている。
+    // ステータス：最終試験をクリアしたので横綱になっている。
     await page.getByRole("link", { name: "ステータス" }).click();
-    const rank = [...ranks]
-      .filter((candidate) => !candidate.requiresFinalExam)
-      .sort((a, b) => a.requiredExperience - b.requiredExperience)
-      .filter((candidate) => candidate.requiredExperience <= expected)
-      .at(-1)!;
-    await expect(page.getByText(rank.name)).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "ステータス",
+    );
+    const yokozuna = ranks.find((rank) => rank.requiresFinalExam)!;
+    await expect(page.getByText(yokozuna.name, { exact: true })).toBeVisible();
+    await expect(page.getByText("これより上はない")).toBeVisible();
+    // 「6 のうち 6」はわざの行にも出るため、クリアの行に絞る。
     await expect(
-      page.getByText(`${stages.length} のうち ${playable.length}`),
-    ).toBeVisible();
+      page
+        .getByRole("region", { name: "あつめたもの" })
+        .locator("div")
+        .filter({ hasText: "クリア" }),
+    ).toContainText(`${stages.length} のうち ${playable.length}`);
   });
 });

@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
 import { quizzes } from "@/data/quizzes";
-import { stages } from "@/data/stages";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -19,6 +18,19 @@ const replace = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push, replace }),
 }));
+
+// 全ステージにコンテンツが入ったため、問題のないステージは実データに存在しない。
+// それでも防御の分岐は残してあるので、クイズの解決だけを差し替えて確かめる。
+const content = vi.hoisted(() => ({ emptyQuizzes: false }));
+
+vi.mock("@/lib/content", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/content")>();
+  return {
+    ...actual,
+    quizzesOfStage: (stage: Parameters<typeof actual.quizzesOfStage>[0]) =>
+      content.emptyQuizzes ? [] : actual.quizzesOfStage(stage),
+  };
+});
 
 const stage1Quizzes = quizzes.filter((quiz) => quiz.stageId === "sumo-stable");
 
@@ -76,6 +88,7 @@ async function answerAll(
 }
 
 beforeEach(() => {
+  content.emptyQuizzes = false;
   window.localStorage.clear();
   push.mockClear();
   replace.mockClear();
@@ -230,18 +243,9 @@ describe("取組画面", () => {
   });
 
   it("問題がないステージでは準備中を出す", async () => {
-    // どのステージが未投入かはコンテンツの追加とともに変わるため、データから引く。
-    const empty = stages.find((stage) => stage.quizIds.length === 0)!;
-    storeSave(
-      unlockedSave({
-        stageProgress: {
-          ...createSave().stageProgress,
-          "sumo-stable": { status: "cleared", bestScore: 5, attempts: 1 },
-          [empty.id]: { status: "unlocked", bestScore: 0, attempts: 0 },
-        },
-      }),
-    );
-    renderBattle(empty.id);
+    content.emptyQuizzes = true;
+    storeSave(unlockedSave());
+    renderBattle();
 
     await waitFor(() =>
       expect(

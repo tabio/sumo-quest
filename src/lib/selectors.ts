@@ -26,13 +26,28 @@ export function currentRank(save: PlayerSave): Rank {
   return rankFromExperience(save.experience, hasClearedFinalStage(save));
 }
 
-/** 次の番付までに必要な残りEXP。最上位では null。 */
+/**
+ * 最高位に到達しているか。
+ * 横綱は最終試験のクリアが条件のため、EXPだけでは true にならない。
+ */
+export function isAtHighestRank(save: PlayerSave): boolean {
+  return currentRank(save).requiresFinalExam === true;
+}
+
+/**
+ * 次の番付までに必要な残りEXP。これ以上の番付がない場合は null。
+ *
+ * 横綱に昇進したあとも null を返す。
+ * EXPの表だけを見ると、横綱より下の番付が「次」として残ってしまうため。
+ */
 export function experienceToNext(save: PlayerSave): number | null {
+  if (isAtHighestRank(save)) return null;
   return experienceToNextRank(save.experience);
 }
 
-/** 次の番付。最上位では null。 */
+/** 次の番付。これ以上の番付がない場合は null。 */
 export function upcomingRank(save: PlayerSave): Rank | null {
+  if (isAtHighestRank(save)) return null;
   return nextRank(save.experience);
 }
 

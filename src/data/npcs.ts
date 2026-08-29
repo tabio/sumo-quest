@@ -8,4 +8,9 @@ export const npcs: Npc[] = [
     name: "親方",
     portraitPath: "characters/placeholder.png",
   },
+  {
+    id: "yokozuna",
+    name: "横綱",
+    portraitPath: "characters/placeholder.png",
+  },
 ];

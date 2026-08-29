@@ -150,4 +150,19 @@ export const lessons: Lesson[] = [
       "yumitorishiki",
     ],
   },
+  {
+    id: "yokozuna-castle-lesson",
+    stageId: "yokozuna-castle",
+    speakerId: "yokozuna",
+    messages: [
+      "よく来た。この城まで上がってきたか。",
+      "私が横綱だ。ここで待っていた。",
+      "最後の取組は、お前がこれまで学んだことすべてから出す。",
+      "土俵のこと、決まり手のこと、番付のこと、本場所のこと。どれも落とせん。",
+      "10番のうち8番取れば、お前の勝ちだ。",
+      "負けても、何度でも来ればいい。だが、まぐれで勝てる数にはしていない。",
+      "支度はいいか。土俵で待つ。",
+    ],
+    rewardExp: 10,
+  },
 ];

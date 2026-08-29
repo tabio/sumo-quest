@@ -380,4 +380,157 @@ export const quizzes: Quiz[] = [
     rewardExp: 10,
     termIds: ["yumitorishiki", "musubi-no-ichiban"],
   },
+  // 最終試験。STAGE 1〜5 の全範囲から2問ずつ出す（PRD「7. 学習ステージ」STAGE 6）。
+  // どのステージから出た問題かは termIds で辿れる。
+  {
+    id: "yokozuna-castle-quiz-1",
+    stageId: "yokozuna-castle",
+    question: "相撲を取る人のことを何という？",
+    choices: [
+      { id: "a", label: "力士" },
+      { id: "b", label: "行司" },
+      { id: "c", label: "親方" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「力士」。行司は取組をさばく人、親方は力士を指導する人だ。どちらも土俵で相撲は取らない。",
+    rewardExp: 10,
+    termIds: ["rikishi"],
+  },
+  {
+    id: "yokozuna-castle-quiz-2",
+    stageId: "yokozuna-castle",
+    question: "力士が生活し、稽古をする場所は？",
+    choices: [
+      { id: "a", label: "相撲部屋" },
+      { id: "b", label: "土俵" },
+      { id: "c", label: "国技館" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「相撲部屋」。土俵は取組を行う場所、国技館は本場所がひらかれる会場で、どちらも住む場所ではない。",
+    rewardExp: 10,
+    termIds: ["heya"],
+  },
+  {
+    id: "yokozuna-castle-quiz-3",
+    stageId: "yokozuna-castle",
+    question:
+      "取組の前に、両手を土俵につけて相手と呼吸を合わせることを何という？",
+    choices: [
+      { id: "a", label: "仕切り" },
+      { id: "b", label: "立合い" },
+      { id: "c", label: "土俵入り" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「仕切り」。呼吸が合って二人が同時に立ち上がるのが立合いで、その一つ前の動きにあたる。土俵入りは取組の前に行う儀式だ。",
+    rewardExp: 10,
+    termIds: ["shikiri", "tachiai"],
+  },
+  {
+    id: "yokozuna-castle-quiz-4",
+    stageId: "yokozuna-castle",
+    question: "禁じ手を使うと、どうなる？",
+    choices: [
+      { id: "a", label: "その場で負けになる" },
+      { id: "b", label: "注意されるだけ" },
+      { id: "c", label: "取り直しになる" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「その場で負けになる」。強さより先に決まりを守ることが求められる。取り直しになるのは、物言いのあとで勝敗が決まらなかったときだ。",
+    rewardExp: 10,
+    termIds: ["kinjite"],
+  },
+  {
+    id: "yokozuna-castle-quiz-5",
+    stageId: "yokozuna-castle",
+    question: "相手の腕の内側からまわしをつかんで投げる技は？",
+    choices: [
+      { id: "a", label: "下手投げ" },
+      { id: "b", label: "上手投げ" },
+      { id: "c", label: "寄り切り" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「下手投げ」。外側からつかんで投げるのが上手投げだ。寄り切りは投げずに、体を寄せて土俵の外へ出す技になる。",
+    rewardExp: 10,
+    techniqueId: "shitatenage",
+  },
+  {
+    id: "yokozuna-castle-quiz-6",
+    stageId: "yokozuna-castle",
+    question: "決まり手は全部でいくつある？",
+    choices: [
+      { id: "a", label: "82手" },
+      { id: "b", label: "6手" },
+      { id: "c", label: "100手" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「82手」。6手は、この旅で覚えた代表的な決まり手の数だ。すべてを覚えている力士はほとんどいない。",
+    rewardExp: 10,
+    termIds: ["kimarite"],
+  },
+  {
+    id: "yokozuna-castle-quiz-7",
+    stageId: "yokozuna-castle",
+    question: "番付で、十両のすぐ上にあるまとまりは？",
+    choices: [
+      { id: "a", label: "幕内" },
+      { id: "b", label: "幕下" },
+      { id: "c", label: "三段目" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「幕内」。前頭・小結・関脇・大関・横綱がふくまれる。幕下と三段目は十両よりも下の番付だ。",
+    rewardExp: 10,
+    termIds: ["makuuchi"],
+  },
+  {
+    id: "yokozuna-castle-quiz-8",
+    stageId: "yokozuna-castle",
+    question: "15日間の本場所で8敗すると、何という？",
+    choices: [
+      { id: "a", label: "負け越し" },
+      { id: "b", label: "勝ち越し" },
+      { id: "c", label: "取り直し" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「負け越し」。15日のうち8敗すれば、勝ちの数より負けの数が多くなり、番付は下がる。8勝したときが勝ち越しだ。",
+    rewardExp: 10,
+    termIds: ["makekoshi", "kachikoshi"],
+  },
+  {
+    id: "yokozuna-castle-quiz-9",
+    stageId: "yokozuna-castle",
+    question: "年6回の本場所のうち、東京でひらかれるのは何回？",
+    choices: [
+      { id: "a", label: "3回" },
+      { id: "b", label: "1回" },
+      { id: "c", label: "6回" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「3回」。1月・5月・9月が東京だ。残りは3月が大阪、7月が名古屋、11月が福岡で、全部が東京というわけではない。",
+    rewardExp: 10,
+    termIds: ["honbasho"],
+  },
+  {
+    id: "yokozuna-castle-quiz-10",
+    stageId: "yokozuna-castle",
+    question: "その日の最後の取組を何という？",
+    choices: [
+      { id: "a", label: "結びの一番" },
+      { id: "b", label: "千秋楽" },
+      { id: "c", label: "弓取式" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「結びの一番」。千秋楽は本場所の最後の日、弓取式は結びの一番のあとに行う儀式で、どちらも取組そのものではない。",
+    rewardExp: 10,
+    termIds: ["musubi-no-ichiban", "senshuraku"],
+  },
 ];

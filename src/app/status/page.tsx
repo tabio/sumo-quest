@@ -29,6 +29,7 @@ export default function StatusPage() {
     rank,
     nextRank,
     experienceToNextRank,
+    isTopRank,
     progressOf,
     accuracyOf,
   } = useGame();
@@ -87,7 +88,9 @@ export default function StatusPage() {
             <dd className={styles.value}>
               {nextRank && experienceToNextRank !== null
                 ? `${nextRank.name} まで あと ${experienceToNextRank} EXP`
-                : "これより上はない"}
+                : isTopRank
+                  ? "これより上はない"
+                  : "横綱は 最終試験に かてば なれる"}
             </dd>
           </div>
         </dl>
