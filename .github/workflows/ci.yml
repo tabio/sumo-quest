@@ -29,7 +29,8 @@ jobs:
 
       - run: npm run build
 
-      # 事前ビルドした out/ を配信してE2Eを実行する。
+      # 事前ビルドした out/ を、配信時と同じ basePath の下に置いて配信する。
+      # 配置は scripts/serve-e2e.mjs が行う。経緯は ADR-0005 を参照。
       - run: npx playwright install --with-deps chromium
 
       - run: npm run test:e2e

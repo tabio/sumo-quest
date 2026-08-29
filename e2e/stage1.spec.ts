@@ -5,6 +5,10 @@ import { quizzes } from "../src/data/quizzes";
 // E2E 1本目：新規開始 → STAGE 1 クリア。
 // testing.md のとおり Phase 1 の完了ゲートに含める。
 // Phase 2 の汎用化リファクタで STAGE 1 が壊れたことを即座に検知するため（R-2）。
+//
+// goto に渡すパスは baseURL からの相対で書く。
+// baseURL には basePath が含まれるため（playwright.config.ts）、
+// 先頭スラッシュで書くと basePath を外れて404になる。
 
 const SAVE_KEY = "sumo-quest:save";
 
@@ -43,7 +47,7 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
   test("名前を決めて学習と取組を終え、再読み込みしても続きから再開できる", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("./");
 
     // タイトル：セーブがないので「つづきから」は押せない。
     await expect(
@@ -105,7 +109,7 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
   });
 
   test("同じステージを再プレイしてもEXPが二重に入らない", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("./");
     await page.getByRole("link", { name: "はじめから" }).click();
     await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
     await page.getByRole("button", { name: "けってい" }).click();
@@ -131,25 +135,25 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
   test("セーブがない状態でマップへ直接来るとタイトルへ戻される", async ({
     page,
   }) => {
-    await page.goto("/map/");
+    await page.goto("map/");
     await expect(
       page.getByRole("heading", { level: 1, name: "SUMO QUEST" }),
     ).toBeVisible();
   });
 
   test("未解放のステージへ直接来るとマップへ戻される", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("./");
     await page.getByRole("link", { name: "はじめから" }).click();
     await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
     await page.getByRole("button", { name: "けってい" }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
 
-    await page.goto("/stage/kokugikan/");
+    await page.goto("stage/kokugikan/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
   });
 
   test("保存が壊れていても消さず、案内を出す", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("./");
     await page.evaluate(
       (key) => window.localStorage.setItem(key, "{壊れている"),
       SAVE_KEY,
