@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolveBasePath } from "./config/basePath.mjs";
 
 // E2Eの設定。
 // 静的エクスポートした out/ を配信して確認する。
@@ -7,14 +8,22 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4173;
 
+// 配信もビルドと同じ basePath の下で行う（scripts/serve-e2e.mjs）。
+// baseURL に basePath まで含めるため、テスト側の goto は相対パスで書く。
+// 末尾のスラッシュは相対解決に必要なので落とさないこと。
+const baseURL = `http://127.0.0.1:${PORT}${resolveBasePath()}/`;
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? "line" : "list",
+  // CIの実行機はローカルより遅く、1本で十数回の画面遷移を行うテストがある。
+  timeout: process.env.CI ? 60_000 : 30_000,
+  // CIでは失敗時にレポートを成果物として残す（.github/workflows/ci.yml）。
+  reporter: process.env.CI ? [["line"], ["html", { open: "never" }]] : "list",
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL,
     trace: "on-first-retry",
   },
   projects: [
@@ -25,8 +34,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npx serve out --listen ${PORT} --no-clipboard`,
-    port: PORT,
+    command: "node scripts/serve-e2e.mjs",
+    env: { E2E_PORT: String(PORT) },
+    // ポートではなくURLで待つ。basePath の下に置けていない場合に、
+    // テスト本体ではなく起動時点で気づけるようにする。
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

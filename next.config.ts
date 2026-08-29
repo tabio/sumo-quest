@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
+import { resolveBasePath } from "./config/basePath.mjs";
 
-// GitHub Pages ではリポジトリ配下のサブパスで配信されるため、basePath を付ける。
-// ローカル開発では空文字とし、http://localhost:3000/ で動くようにする。
-// 判定は GitHub Actions が設定する環境変数で行う。
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1];
-const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
-const basePath = isGitHubPages && repositoryName ? `/${repositoryName}` : "";
+// basePath の導出は config/basePath.mjs に置いている。
+// E2Eの配信側（playwright.config.ts）と同じ値を使う必要があるため。
+const basePath = resolveBasePath();
 
 const nextConfig: NextConfig = {
   output: "export",
