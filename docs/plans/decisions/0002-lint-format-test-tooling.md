@@ -30,7 +30,7 @@
 - Prettierの対象からMarkdownを除外する
 - ESLintは `9` 系に固定する
 
-E2E（Playwright想定）は Phase 1 の完了ゲートで導入する。
+E2E（Playwright）は Phase 1 の完了ゲートで導入する。
 時期は [testing.md](../testing.md) を正とする。
 
 ## 理由
