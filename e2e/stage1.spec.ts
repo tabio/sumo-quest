@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { lessons } from "../src/data/lessons";
 import { quizzes } from "../src/data/quizzes";
+import { stages } from "../src/data/stages";
+import { LESSON_REWARD_EXP, QUIZ_CORRECT_REWARD_EXP } from "../src/lib/game";
 
 // E2E 1本目：新規開始 → STAGE 1 クリア。
 // testing.md のとおり Phase 1 の完了ゲートに含める。
@@ -12,6 +14,7 @@ import { quizzes } from "../src/data/quizzes";
 
 const SAVE_KEY = "sumo-quest:save";
 
+const stage1 = stages.find((stage) => stage.id === "sumo-stable")!;
 const stage1Quizzes = quizzes.filter((quiz) => quiz.stageId === "sumo-stable");
 const stage1Lesson = lessons.find(
   (lesson) => lesson.stageId === "sumo-stable",
@@ -35,6 +38,35 @@ async function answerAllCorrectly(page: Page) {
     );
     await page.getByRole("button", { name: correct?.label }).click();
     await expect(page.getByRole("status")).toContainText("せいかい");
+
+    const isLast = index === stage1Quizzes.length - 1;
+    await page
+      .getByRole("button", { name: isLast ? "けっかへ" : "つぎの問題へ" })
+      .click();
+  }
+}
+
+/**
+ * 指定した問だけ誤答し、残りは正解する。
+ * 誤答の選択肢はコンテンツデータから引くため、選択肢の並びに依存しない。
+ */
+async function answerWithMistakeAt(page: Page, wrongIndex: number) {
+  for (const [index, quiz] of stage1Quizzes.entries()) {
+    await expect(page.getByText(quiz.question)).toBeVisible();
+
+    const isWrong = index === wrongIndex;
+    const choice = quiz.choices.find((candidate) =>
+      isWrong
+        ? candidate.id !== quiz.correctChoiceId
+        : candidate.id === quiz.correctChoiceId,
+    );
+    await page.getByRole("button", { name: choice?.label }).click();
+
+    // 正誤がどちらでも、判定と解説の両方が出る。
+    await expect(page.getByRole("status")).toContainText(
+      isWrong ? "まちがい" : "せいかい",
+    );
+    await expect(page.getByText(quiz.explanation)).toBeVisible();
 
     const isLast = index === stage1Quizzes.length - 1;
     await page
@@ -130,6 +162,40 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
 
     // EXPは増えていない。
     await expect(page.getByText("110")).toBeVisible();
+  });
+
+  // 完了ゲートの「取組で正解・不正解の双方を体験できる」に対応する。
+  // 誤答しても進めること、加点が正解した分だけであることを、
+  // 配信と同じ静的エクスポートの上で確認する。
+  test("誤答しても解説を読んで先へ進め、正解した分だけEXPが入る", async ({
+    page,
+  }) => {
+    await page.goto("./");
+    await page.getByRole("link", { name: "はじめから" }).click();
+    await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
+    await page.getByRole("button", { name: "けってい" }).click();
+
+    await page.getByRole("link", { name: /すもう部屋/ }).click();
+    await readLesson(page);
+    await page.getByRole("link", { name: "取組へ" }).click();
+
+    // 1問目だけ誤答する。合格率は 0.6 のため、これでも勝ち越す。
+    await answerWithMistakeAt(page, 0);
+
+    const correctCount = stage1Quizzes.length - 1;
+    await expect(page.getByRole("status")).toContainText("かちこし");
+    await expect(page.getByRole("region", { name: "成績" })).toContainText(
+      `${correctCount} / ${stage1Quizzes.length}`,
+    );
+
+    // 誤答した1問分は加点されない。数値はコンテンツデータから導く。
+    const total =
+      LESSON_REWARD_EXP +
+      correctCount * QUIZ_CORRECT_REWARD_EXP +
+      stage1.clearRewardExp;
+
+    await page.getByRole("link", { name: "マップへもどる" }).click();
+    await expect(page.getByText(String(total))).toBeVisible();
   });
 
   test("セーブがない状態でマップへ直接来るとタイトルへ戻される", async ({
