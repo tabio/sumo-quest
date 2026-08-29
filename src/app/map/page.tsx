@@ -15,15 +15,12 @@ import styles from "./page.module.css";
 
 // マップ下部のメニュー。
 //
-// 画面ができるまでリンクにすると、静的エクスポートには行き先が無く、
-// 押した利用者が404で行き止まりになる。
-// 未完成のものは、未解放の地点（WorldMap）と同じく操作できない状態で示す。
-// 画面ができたら href を与えてリンクに変える。
+// href の無い項目は、まだ画面が無いものとして操作できない状態で示す。
+// リンクにすると静的エクスポートには行き先が無く、404で行き止まりになるため。
 const MENU: { label: string; href?: string }[] = [
   { label: "わざずかん", href: "/techniques" },
   { label: "すもうじてん", href: "/dictionary" },
-  // ステータス画面は P2-11 で作る。
-  { label: "ステータス" },
+  { label: "ステータス", href: "/status" },
 ];
 
 export default function MapPage() {
