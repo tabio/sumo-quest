@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { GameProvider } from "@/context/GameProvider";
+import { techniques } from "@/data/techniques";
 import { SAVE_KEY } from "@/lib/storage";
 import { toSaveEnvelope } from "@/lib/validation";
 import { createSave } from "@/test/fixtures";
@@ -69,7 +70,10 @@ describe("useGame", () => {
     expect(screen.getByTestId("stage")).toHaveTextContent("すもう部屋");
     expect(screen.getByTestId("unlocked")).toHaveTextContent("true");
     expect(screen.getByTestId("locked")).toHaveTextContent("false");
-    expect(screen.getByTestId("techniqueRate")).toHaveTextContent("0.5");
+    // 技の総数は決まり手の投入とともに増えるため、データから導く。
+    expect(screen.getByTestId("techniqueRate")).toHaveTextContent(
+      String(1 / techniques.length),
+    );
   });
 
   it("Provider の外で使うと分かるエラーになる", () => {

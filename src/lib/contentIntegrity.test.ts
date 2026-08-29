@@ -70,6 +70,7 @@ function soundBundle(): ContentBundle {
         name: "寄り切り",
         reading: "よりきり",
         description: "土俵の外へ押し出す技。",
+        difficulty: 1,
       },
     ],
     terms: [

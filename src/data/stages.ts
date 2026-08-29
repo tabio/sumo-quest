@@ -40,21 +40,27 @@ export const stages: Stage[] = [
     clearRewardExp: 50,
     unlocks: "dojo",
   },
-  // STAGE 3以降は地点だけを置き、学習とクイズは P2-5〜P2-7 と Phase 3 で入れる。
-  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
-  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "dojo",
     order: 3,
     name: "わざ道場",
     theme: "決まり手",
     npcId: "oyakata",
-    lessonIds: [],
-    quizIds: [],
+    lessonIds: ["dojo-lesson"],
+    quizIds: [
+      "dojo-quiz-1",
+      "dojo-quiz-2",
+      "dojo-quiz-3",
+      "dojo-quiz-4",
+      "dojo-quiz-5",
+    ],
     passRate: 0.6,
     clearRewardExp: 50,
     unlocks: "banzuke-shrine",
   },
+  // STAGE 4以降は地点だけを置き、学習とクイズは P2-6・P2-7 と Phase 3 で入れる。
+  // マップに6地点を並べるために必要なため、名前とテーマだけ先に確定させている。
+  // 名前とテーマの出典はPRD「7. 学習ステージ」。
   {
     id: "banzuke-shrine",
     order: 4,
