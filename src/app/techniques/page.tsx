@@ -5,7 +5,6 @@ import { PixelWindow } from "@/components/game/PixelWindow";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { techniques } from "@/data/techniques";
 import { useGame } from "@/hooks/useGame";
-import { useRouteGuard } from "@/hooks/useRouteGuard";
 import styles from "./page.module.css";
 
 // 技図鑑。設計書「4. URL・画面一覧」／PRD「9. コレクション」。
@@ -13,6 +12,9 @@ import styles from "./page.module.css";
 // 未習得の技も件数だけは見せる。
 // 「あと何が残っているか」が分かるほうが、稽古に戻る動機になる（P2-9）。
 // 名前と説明は伏せ、難易度だけを出す。
+//
+// セーブがなくても開ける。タイトルからの導線に含まれるため（PRD「12. 主要画面」）。
+// 何も習得していない状態として、すべて伏せた一覧を出す。
 
 /** 難易度を記号の数で表す。色に頼らずに強弱を示すため（設計書「15.」）。 */
 function difficultyMark(difficulty: number): string {
@@ -20,28 +22,13 @@ function difficultyMark(difficulty: number): string {
 }
 
 export default function TechniquesPage() {
-  const { isReady, state } = useGame();
-  // セーブがない状態で直接来た場合はタイトルへ戻す（設計書「16.」）。
-  const guard = useRouteGuard();
+  const { isReady, state, hasSave } = useGame();
 
   if (!isReady) {
     return (
       <GameShell title="わざずかん">
         <PixelWindow>
           <p>よみこみちゅう...</p>
-        </PixelWindow>
-      </GameShell>
-    );
-  }
-
-  if (guard.kind === "redirect") {
-    return (
-      <GameShell title="わざずかん">
-        <PixelWindow heading="記録がありません">
-          <p>タイトルへもどります。</p>
-          <PixelLink href="/" variant="primary">
-            タイトルへ
-          </PixelLink>
         </PixelWindow>
       </GameShell>
     );
@@ -91,9 +78,16 @@ export default function TechniquesPage() {
       </PixelWindow>
 
       <PixelWindow>
-        <PixelLink href="/map" variant="primary">
-          マップへもどる
-        </PixelLink>
+        {/* セーブがない状態ではマップへ入れないため、戻り先を出し分ける。 */}
+        {hasSave ? (
+          <PixelLink href="/map" variant="primary">
+            マップへもどる
+          </PixelLink>
+        ) : (
+          <PixelLink href="/" variant="primary">
+            タイトルへもどる
+          </PixelLink>
+        )}
       </PixelWindow>
     </GameShell>
   );

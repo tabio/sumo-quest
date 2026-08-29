@@ -100,12 +100,23 @@ describe("技図鑑", () => {
     );
   });
 
-  it("セーブがない場合はタイトルへ戻す", async () => {
+  it("セーブがなくても開ける", async () => {
+    // タイトルからの導線に含まれるため（PRD「12. 主要画面」）。
     renderPage();
 
-    await waitFor(() => expect(replace).toHaveBeenCalledWith("/"));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "決まり手" }),
+      ).toBeInTheDocument(),
+    );
+    expect(replace).not.toHaveBeenCalled();
+    expect(screen.getAllByText("？？？")).toHaveLength(techniques.length);
     expect(
-      screen.getByRole("region", { name: "記録がありません" }),
+      screen.getByText(`${techniques.length} のうち 0 をおぼえた`),
     ).toBeInTheDocument();
+    // マップへは入れないため、戻り先はタイトルにする。
+    expect(
+      screen.getByRole("link", { name: "タイトルへもどる" }),
+    ).toHaveAttribute("href", "/");
   });
 });
