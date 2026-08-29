@@ -51,12 +51,11 @@
   color: var(--color-success);
 }
 
+/* 未解放は操作できないが、地名は読ませる必要がある。
+ * 文字は補助テキスト色にしてコントラストを確保し、
+ * 操作できないことは枠の色・記号・文言で示す（設計書「15.」）。 */
 .locked {
   background-color: var(--color-bg);
   border-color: var(--color-disabled);
-  color: var(--color-disabled);
-}
-
-.locked .state {
-  color: var(--color-disabled);
+  color: var(--color-text-muted);
 }

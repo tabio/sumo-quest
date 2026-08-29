@@ -11,6 +11,11 @@ const css = readFileSync(
   "utf8",
 );
 
+const buttonCss = readFileSync(
+  path.join(import.meta.dirname, "../components/ui/PixelButton.module.css"),
+  "utf8",
+);
+
 function token(name: string): string {
   const match = css.match(new RegExp(`--${name}:\\s*([^;]+);`));
   if (!match) throw new Error(`トークン --${name} が見つからない`);
@@ -57,6 +62,8 @@ describe("デザイントークン", () => {
     ["強調ボタンの文字", "color-accent-text", "color-accent"],
     ["正解表示", "color-success", "color-surface"],
     ["不正解表示", "color-danger", "color-surface"],
+    ["未解放・未習得の説明", "color-text-muted", "color-surface"],
+    ["エンディングの見出し", "color-accent", "color-surface"],
   ])("%s のコントラスト比が4.5:1以上", (_label, foreground, background) => {
     expect(contrastRatio(token(foreground), token(background))).toBeGreaterThan(
       TEXT_MINIMUM,
@@ -71,6 +78,28 @@ describe("デザイントークン", () => {
 
   it("タップ領域の最小サイズが44px以上", () => {
     expect(parseInt(token("tap-min-size"), 10)).toBeGreaterThanOrEqual(44);
+  });
+
+  it("ボタンとリンクがタップ領域の最小サイズを守る", () => {
+    // P4-2。値だけ決めても使われていなければ意味がないため、適用側も見る。
+    expect(buttonCss).toContain("min-height: var(--tap-min-size)");
+    expect(buttonCss).toContain("min-width: var(--tap-min-size)");
+  });
+
+  it("フォーカスリングが見える", () => {
+    // P4-2。キーボードで操作したとき、今どこにいるかが分かる必要がある。
+    const focus = css.match(/:focus-visible\s*\{([^}]+)\}/);
+    expect(focus).not.toBeNull();
+    expect(focus![1]).toContain("outline:");
+    expect(focus![1]).not.toContain("outline: none");
+  });
+
+  it("アニメーション軽減設定を尊重する", () => {
+    // P4-5。動きに弱い利用者のために、動きを止められるようにする。
+    expect(css).toContain("@media (prefers-reduced-motion: reduce)");
+    const reduced = css.slice(css.indexOf("prefers-reduced-motion"));
+    expect(reduced).toContain("animation-duration: 0.01ms !important");
+    expect(reduced).toContain("transition-duration: 0.01ms !important");
   });
 
   it("角丸を持たない", () => {

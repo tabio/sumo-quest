@@ -14,14 +14,12 @@ import styles from "./page.module.css";
 // セーブがない状態で来た場合の扱いは P1-13 のルートガードで入れる。
 
 // マップ下部のメニュー。
-//
-// href の無い項目は、まだ画面が無いものとして操作できない状態で示す。
-// リンクにすると静的エクスポートには行き先が無く、404で行き止まりになるため。
-const MENU: { label: string; href?: string }[] = [
+// 行き先の無い項目は置かない。静的エクスポートでは404の行き止まりになるため。
+const MENU = [
   { label: "わざずかん", href: "/techniques" },
   { label: "すもうじてん", href: "/dictionary" },
   { label: "ステータス", href: "/status" },
-];
+] as const;
 
 export default function MapPage() {
   const { isReady } = useGame();
@@ -63,14 +61,7 @@ export default function MapPage() {
         <ul className={styles.menu}>
           {MENU.map((item) => (
             <li key={item.label}>
-              {item.href ? (
-                <PixelLink href={item.href}>{item.label}</PixelLink>
-              ) : (
-                <span className={styles.menuItem} aria-disabled="true">
-                  <span>{item.label}</span>
-                  <span className={styles.menuState}>準備中</span>
-                </span>
-              )}
+              <PixelLink href={item.href}>{item.label}</PixelLink>
             </li>
           ))}
         </ul>

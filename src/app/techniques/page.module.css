@@ -19,10 +19,12 @@
   background-color: var(--color-surface);
 }
 
-/* 未習得は色だけでなく、名前と説明の文言でも区別できるようにする。 */
+/* 未習得は色だけでなく、名前と説明の文言でも区別できるようにする。
+ * 文字は補助テキスト色にする。伏せてはいるが読ませる情報であり、
+ * 操作できない部品ではないため、コントラストを落とさない。 */
 .unknown {
   border-color: var(--color-disabled);
-  color: var(--color-disabled);
+  color: var(--color-text-muted);
 }
 
 .name {
@@ -44,7 +46,7 @@
 
 .unknown .reading,
 .unknown .difficulty {
-  color: var(--color-disabled);
+  color: var(--color-text-muted);
 }
 
 .description {
