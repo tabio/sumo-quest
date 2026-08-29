@@ -37,16 +37,27 @@ describe("ステージの投入状況", () => {
     expect(stages).toHaveLength(6);
   });
 
-  it("コンテンツが入っているのは STAGE 1 と STAGE 2", () => {
-    // STAGE 3以降は P2-5〜P2-7 と Phase 3 で投入する。
+  it("コンテンツが入っているのは STAGE 1〜3", () => {
+    // STAGE 4以降は P2-6・P2-7 と Phase 3 で投入する。
     const withContent = stages.filter((stage) => stage.lessonIds.length > 0);
     expect(withContent.map((stage) => stage.id)).toEqual([
       "sumo-stable",
       "dohyo",
+      "dojo",
     ]);
   });
 
-  it.each(["sumo-stable", "dohyo"])("%s のクイズが5問ある", (stageId) => {
-    expect(quizzes.filter((quiz) => quiz.stageId === stageId)).toHaveLength(5);
+  it("MVPで扱う決まり手が6種類そろっている", () => {
+    // PRD「7. 学習ステージ」STAGE 3。
+    expect(techniques).toHaveLength(6);
   });
+
+  it.each(["sumo-stable", "dohyo", "dojo"])(
+    "%s のクイズが5問ある",
+    (stageId) => {
+      expect(quizzes.filter((quiz) => quiz.stageId === stageId)).toHaveLength(
+        5,
+      );
+    },
+  );
 });

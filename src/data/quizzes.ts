@@ -155,4 +155,79 @@ export const quizzes: Quiz[] = [
     rewardExp: 10,
     termIds: ["kinjite"],
   },
+  {
+    id: "dojo-quiz-1",
+    stageId: "dojo",
+    question: "勝負が決まったときの技の名前を、まとめて何という？",
+    choices: [
+      { id: "a", label: "決まり手" },
+      { id: "b", label: "禁じ手" },
+      { id: "c", label: "物言い" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「決まり手」。全部で82手ある。禁じ手は使ってはいけない反則、物言いは判定に疑問があるときに審判が異議を唱えることだ。",
+    rewardExp: 10,
+    termIds: ["kimarite"],
+  },
+  {
+    id: "dojo-quiz-2",
+    stageId: "dojo",
+    question: "決まり手の中で、最もよく出るのはどれ？",
+    choices: [
+      { id: "a", label: "寄り切り" },
+      { id: "b", label: "上手投げ" },
+      { id: "c", label: "叩き込み" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「寄り切り」。まわしをつかんで体を寄せ、土俵の外へ出す技だ。上手投げも叩き込みもよく見る技だが、寄り切りほどの数にはならない。",
+    rewardExp: 10,
+    techniqueId: "yorikiri",
+  },
+  {
+    id: "dojo-quiz-3",
+    stageId: "dojo",
+    question: "まわしをつかまずに、相手の体を手で押して土俵の外へ出す技は？",
+    choices: [
+      { id: "a", label: "押し出し" },
+      { id: "b", label: "寄り切り" },
+      { id: "c", label: "下手投げ" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「押し出し」。寄り切りも相手を外へ出す技だが、こちらはまわしをつかんで体を寄せる。下手投げは相手の腕の内側からまわしをつかんで投げる技だ。",
+    rewardExp: 10,
+    techniqueId: "oshidashi",
+  },
+  {
+    id: "dojo-quiz-4",
+    stageId: "dojo",
+    question: "相手の腕の外側からまわしをつかんで投げる技は？",
+    choices: [
+      { id: "a", label: "上手投げ" },
+      { id: "b", label: "下手投げ" },
+      { id: "c", label: "突き落とし" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「上手投げ」。腕が外側にあるほうを上手という。内側からつかんで投げるのが下手投げ、横から突いてたおすのが突き落としだ。",
+    rewardExp: 10,
+    techniqueId: "uwatenage",
+  },
+  {
+    id: "dojo-quiz-5",
+    stageId: "dojo",
+    question: "前に出てくる相手を上からたたいて、土俵に手をつかせる技は？",
+    choices: [
+      { id: "a", label: "叩き込み" },
+      { id: "b", label: "突き落とし" },
+      { id: "c", label: "押し出し" },
+    ],
+    correctChoiceId: "a",
+    explanation:
+      "正解は「叩き込み」。相手の勢いを利用するので、体が小さくても決まることがある。突き落としは横からひねって突く技、押し出しは前へ押して外へ出す技だ。",
+    rewardExp: 10,
+    techniqueId: "hatakikomi",
+  },
 ];

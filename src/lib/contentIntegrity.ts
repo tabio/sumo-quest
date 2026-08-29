@@ -260,6 +260,13 @@ export function collectContentProblems(bundle: ContentBundle): string[] {
         `technique ${technique.id}: 名前・読み・説明のいずれかが空`,
       );
     }
+
+    // 技図鑑が難易度を出すため、範囲外の値で表示が崩れないようにする（ADR-0006）。
+    if (![1, 2, 3].includes(technique.difficulty)) {
+      problems.push(
+        `technique ${technique.id}: 難易度が1〜3でない（${technique.difficulty}）`,
+      );
+    }
   }
 
   return problems;

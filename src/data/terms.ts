@@ -88,4 +88,11 @@ export const terms: Term[] = [
     description:
       "土俵の円をふちどっている、土をつめた俵。ここより外に出ると負けになる。",
   },
+  {
+    id: "kimarite",
+    name: "決まり手",
+    reading: "きまりて",
+    description:
+      "勝負が決まったときの技の名前。日本相撲協会が定めた82手があり、取組のあとに場内へ知らされる。",
+  },
 ];

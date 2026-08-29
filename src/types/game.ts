@@ -115,12 +115,17 @@ export type QuizAttempt = {
 // 設計書「9. コンテンツデータ」が要求するファイルに対応させるため、ここで補っている。
 // 経緯は docs/plans/decisions/0003-master-data-types.md を参照。
 
+/** 技の難易度。1がやさしく、3がむずかしい。 */
+export type TechniqueDifficulty = 1 | 2 | 3;
+
 export type Technique = {
   id: string;
   /** 決まり手の名称。 */
   name: string;
   reading: string;
   description: string;
+  /** 技図鑑に掲載する難易度（PRD「9. コレクション」）。経緯は ADR-0006。 */
+  difficulty: TechniqueDifficulty;
 };
 
 export type Term = {
