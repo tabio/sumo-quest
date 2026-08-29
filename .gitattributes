@@ -1,0 +1,4 @@
+# 追記専用のファイルは union マージで双方の追加行を残す。
+# 行の順序や一意性が意味を持つファイルには適用しないこと。
+# 詳細は docs/plans/CONVENTIONS.md を参照。
+docs/plans/risks.md merge=union
