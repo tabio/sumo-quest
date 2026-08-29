@@ -18,6 +18,12 @@ type LessonPlayerProps = {
   lesson: Lesson;
   /** 最後のメッセージまで進んだときに1度だけ呼ばれる。 */
   onComplete: () => void;
+  /**
+   * 学習を終えた時点で、導線の前に差し込む内容。
+   * 何を覚えたのかの通知に使う（P2-8）。
+   * 何を覚えたかは保存の中身から決まるため、呼び出し側が組み立てる。
+   */
+  notice?: React.ReactNode;
   /** 学習を終えたあとの導線。 */
   children?: React.ReactNode;
 };
@@ -25,6 +31,7 @@ type LessonPlayerProps = {
 export function LessonPlayer({
   lesson,
   onComplete,
+  notice,
   children,
 }: LessonPlayerProps) {
   const [index, setIndex] = useState(0);
@@ -89,15 +96,10 @@ export function LessonPlayer({
       </PixelWindow>
 
       {completed ? (
-        <PixelWindow heading="学習おわり">
-          {(lesson.discoverTermIds?.length ?? 0) > 0 ||
-          (lesson.unlockTechniqueIds?.length ?? 0) > 0 ? (
-            <p className={styles.discovered} role="status">
-              あたらしい ことばと わざを おぼえた。
-            </p>
-          ) : null}
-          {children}
-        </PixelWindow>
+        <>
+          {notice}
+          <PixelWindow heading="学習おわり">{children}</PixelWindow>
+        </>
       ) : null}
     </div>
   );

@@ -145,6 +145,49 @@ describe("進行のアクション", () => {
     expect(next.save?.quizHistory).toHaveLength(1);
   });
 
+  it("FINISH_BATTLE で覚えたものが保存と要約の双方に入る", () => {
+    // 取組からの技習得・用語発見（P2-8）。
+    // 加点と同じ時点で反映する（ADR-0004）。
+    const next = gameReducer(readyState(), {
+      type: "FINISH_BATTLE",
+      stage: stage1,
+      results: [
+        {
+          quizId: "quiz-1",
+          correct: true,
+          techniqueId: "yorikiri",
+          termIds: ["dohyo"],
+        },
+      ],
+      now: NOW,
+    });
+
+    expect(next.save?.learnedTechniqueIds).toEqual(["yorikiri"]);
+    expect(next.save?.discoveredTermIds).toEqual(["dohyo"]);
+    expect(next.lastBattle?.newTechniqueIds).toEqual(["yorikiri"]);
+    expect(next.lastBattle?.newTermIds).toEqual(["dohyo"]);
+  });
+
+  it("FINISH_BATTLE で誤答した問題の技は覚えない", () => {
+    const next = gameReducer(readyState(), {
+      type: "FINISH_BATTLE",
+      stage: stage1,
+      results: [
+        {
+          quizId: "quiz-1",
+          correct: false,
+          techniqueId: "yorikiri",
+          termIds: ["dohyo"],
+        },
+      ],
+      now: NOW,
+    });
+
+    expect(next.save?.learnedTechniqueIds).toEqual([]);
+    // 用語は解説で読むため、誤答でも発見済みになる。
+    expect(next.save?.discoveredTermIds).toEqual(["dohyo"]);
+  });
+
   it("CLEAR_STAGE で次のステージが解放される", () => {
     const next = gameReducer(readyState(), {
       type: "CLEAR_STAGE",

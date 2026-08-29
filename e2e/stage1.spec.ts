@@ -198,6 +198,26 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
     await expect(page.getByText(String(total))).toBeVisible();
   });
 
+  // 学習を通らずに取組へ入る経路。ルートガードは解放済みなら通す。
+  // この経路でも、取組で出会った用語が記録されることを確かめる（P2-8）。
+  test("学習をとばして取組へ入っても、出会った用語が記録される", async ({
+    page,
+  }) => {
+    await page.goto("./");
+    await page.getByRole("link", { name: "はじめから" }).click();
+    await page.getByLabel("あなたのしこ名は？").fill("ちからまる");
+    await page.getByRole("button", { name: "けってい" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("マップ");
+
+    await page.goto("battle/sumo-stable/");
+    await answerAllCorrectly(page);
+
+    // クイズが扱う用語は、学習を経ていなくても発見済みになる。
+    const learned = page.getByRole("region", { name: "おぼえたこと" });
+    await expect(learned).toContainText("土俵");
+    await expect(learned).toContainText("まわし");
+  });
+
   test("セーブがない状態でマップへ直接来るとタイトルへ戻される", async ({
     page,
   }) => {

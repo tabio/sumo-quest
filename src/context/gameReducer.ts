@@ -1,4 +1,5 @@
 import {
+  applyQuizDiscoveries,
   clearStage,
   completeLesson,
   discoverTerms,
@@ -216,7 +217,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const passed = isQuizPassed(stage, score, results.length);
 
       const recorded = recordQuizResults(before, stage.id, results, now);
-      const after = passed ? clearStage(recorded, stage, now) : recorded;
+      // 出会った用語と覚えた技も、報酬と同じ時点で反映する（ADR-0004）。
+      const discovered = applyQuizDiscoveries(recorded, results);
+      const after = passed ? clearStage(discovered, stage, now) : discovered;
 
       return {
         ...state,

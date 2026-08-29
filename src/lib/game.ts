@@ -137,7 +137,33 @@ export function completeLesson(
 export type QuizResult = {
   quizId: string;
   correct: boolean;
+  /** 正解したときに習得する技。クイズデータから引いて渡す。 */
+  techniqueId?: string;
+  /** その問題で扱った用語。クイズデータから引いて渡す。 */
+  termIds?: string[];
 };
+
+/**
+ * 取組で出会った用語と、正解して覚えた技を反映する。
+ *
+ * 用語は正誤にかかわらず登録する。
+ * 誤答でも解説で説明を読むため、PRD「9. コレクション」の
+ * 「出会った用語を自動登録する」にあたる。
+ *
+ * 技は正解した問題のものだけとする。
+ * 覚えたという手応えを、正解と結び付けておくため。
+ */
+export function applyQuizDiscoveries(
+  save: PlayerSave,
+  results: QuizResult[],
+): PlayerSave {
+  const techniqueIds = results
+    .filter((result) => result.correct)
+    .flatMap((result) => (result.techniqueId ? [result.techniqueId] : []));
+  const termIds = results.flatMap((result) => result.termIds ?? []);
+
+  return discoverTerms(learnTechniques(save, techniqueIds), termIds);
+}
 
 /**
  * 取組の結果を記録する。
