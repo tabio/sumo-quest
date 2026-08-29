@@ -33,6 +33,20 @@ export function findTerm(termId: string): Term | undefined {
   return terms.find((term) => term.id === termId);
 }
 
+/**
+ * 発見済みの用語を五十音順で返す（PRD「9. コレクション」）。
+ * 未発見のものは含めない。
+ *
+ * 並べ替えは読みで行う。表記には漢字が混ざるため、
+ * 見出しの文字コード順では五十音順にならない。
+ */
+export function discoveredTerms(discoveredTermIds: string[]): Term[] {
+  const discovered = new Set(discoveredTermIds);
+  return terms
+    .filter((term) => discovered.has(term.id))
+    .sort((a, b) => a.reading.localeCompare(b.reading, "ja"));
+}
+
 /** ステージの学習を、ステージデータの並び順で取得する。 */
 export function lessonsOfStage(stage: Stage): Lesson[] {
   return stage.lessonIds

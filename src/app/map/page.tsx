@@ -21,8 +21,8 @@ import styles from "./page.module.css";
 // 画面ができたら href を与えてリンクに変える。
 const MENU: { label: string; href?: string }[] = [
   { label: "わざずかん", href: "/techniques" },
-  // 用語辞典は P2-10、ステータス画面は P2-11 で作る。
-  { label: "すもうじてん" },
+  { label: "すもうじてん", href: "/dictionary" },
+  // ステータス画面は P2-11 で作る。
   { label: "ステータス" },
 ];
 

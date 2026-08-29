@@ -129,43 +129,40 @@ describe("ワールドマップ", () => {
     );
   });
 
-  it("できている画面へは進める", async () => {
+  it.each([
+    ["わざずかん", "/techniques"],
+    ["すもうじてん", "/dictionary"],
+  ])("%s へ進める", async (label, href) => {
     storeSave(createSave());
     renderMap();
 
     await waitFor(() =>
-      expect(
-        screen.getByRole("link", { name: "わざずかん" }),
-      ).toBeInTheDocument(),
+      expect(screen.getByRole("link", { name: label })).toBeInTheDocument(),
     );
-    expect(screen.getByRole("link", { name: "わざずかん" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: label })).toHaveAttribute(
       "href",
-      "/techniques",
+      href,
     );
   });
 
-  // 辞典（P2-10）とステータス（P2-11）はまだ無い。
+  // ステータス画面（P2-11）はまだ無い。
   // 画面が無いうちにリンクを出すと、押した利用者が404で行き止まりになる。
   it("まだ無い画面は準備中として押せない状態で並ぶ", async () => {
     storeSave(createSave());
     renderMap();
 
     await waitFor(() =>
-      expect(screen.getByText("すもうじてん")).toBeInTheDocument(),
+      expect(screen.getByText("ステータス")).toBeInTheDocument(),
     );
 
-    for (const label of ["すもうじてん", "ステータス"]) {
-      expect(
-        screen.getByText(label).closest("[aria-disabled]"),
-      ).toHaveAttribute("aria-disabled", "true");
-    }
+    expect(
+      screen.getByText("ステータス").closest("[aria-disabled]"),
+    ).toHaveAttribute("aria-disabled", "true");
 
     // 色以外でも準備中だと分かるようにする（設計書「15.」）。
-    expect(screen.getAllByText("準備中")).toHaveLength(2);
+    expect(screen.getAllByText("準備中")).toHaveLength(1);
 
     // 行き先の無いリンクを出さない。
-    for (const href of ["/dictionary", "/status"]) {
-      expect(document.querySelector(`a[href="${href}"]`)).toBeNull();
-    }
+    expect(document.querySelector('a[href="/status"]')).toBeNull();
   });
 });
