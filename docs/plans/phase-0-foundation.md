@@ -11,7 +11,7 @@
 
 | ID | タスク | 完了条件 | 状態 |
 |---|---|---|---|
-| P0-1 | Next.js（App Router）+ TypeScript でプロジェクト初期化 | `npm run dev` でトップページが表示される | 未着手 |
+| P0-1 | Next.js（App Router）+ TypeScript でプロジェクト初期化 | `npm run dev` でトップページが表示される | 完了 |
 | P0-2 | Lint / フォーマット / テストランナー導入 | `npm run lint`、テストコマンドが成功する | 未着手 |
 | P0-3 | `next.config.ts` に静的エクスポートと `basePath` を設定 | `npm run build` で `out/` が生成される | 未着手 |
 | P0-4 | GitHub Actions ワークフロー作成、Pages有効化 | mainへのpushで自動配信される | 未着手 |
