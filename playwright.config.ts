@@ -31,6 +31,15 @@ export default defineConfig({
       name: "mobile",
       // 基準幅320px以上の想定に合わせ、スマートフォン相当で確認する。
       use: { ...devices["Pixel 5"] },
+      testIgnore: /narrow\.spec\.ts/,
+    },
+    {
+      // 基準幅ちょうどでの表示確認（P4-4）。
+      // 対応端末の下限であり、ここで崩れなければ広い画面でも崩れない。
+      // 全本数を2回流すと時間だけが増えるため、専用の1本に限る。
+      name: "narrow",
+      use: { ...devices["Pixel 5"], viewport: { width: 320, height: 568 } },
+      testMatch: /narrow\.spec\.ts/,
     },
   ],
   webServer: {
