@@ -6,6 +6,7 @@ import { PixelLink } from "@/components/ui/PixelLink";
 import { techniques } from "@/data/techniques";
 import { terms } from "@/data/terms";
 import { useGame } from "@/hooks/useGame";
+import { useRouteGuard } from "@/hooks/useRouteGuard";
 import { findStage } from "@/lib/content";
 import styles from "./page.module.css";
 
@@ -25,6 +26,8 @@ function nameOfTerm(id: string): string {
 
 export function ResultScreen({ stageId }: { stageId: string }) {
   const { isReady, state } = useGame();
+  // セーブなしでリザルトへ直リンクされた場合はタイトルへ戻す（設計書「16.」）。
+  const guard = useRouteGuard();
   const battle = state.lastBattle;
   const stage = findStage(stageId);
 
@@ -33,6 +36,19 @@ export function ResultScreen({ stageId }: { stageId: string }) {
       <GameShell title="けっか">
         <PixelWindow>
           <p>よみこみちゅう...</p>
+        </PixelWindow>
+      </GameShell>
+    );
+  }
+
+  if (guard.kind === "redirect") {
+    return (
+      <GameShell title="けっか">
+        <PixelWindow heading="記録がありません">
+          <p>タイトルへもどります。</p>
+          <PixelLink href="/" variant="primary">
+            タイトルへ
+          </PixelLink>
         </PixelWindow>
       </GameShell>
     );

@@ -5,15 +5,19 @@ import { PixelWindow } from "@/components/game/PixelWindow";
 import { LessonPlayer } from "@/components/learning/LessonPlayer";
 import { PixelLink } from "@/components/ui/PixelLink";
 import { useGame } from "@/hooks/useGame";
+import { GUARD_HEADINGS, GUARD_MESSAGES } from "@/hooks/guardMessages";
+import { useRouteGuard } from "@/hooks/useRouteGuard";
 import { findStage, lessonsOfStage } from "@/lib/content";
 
 // ステージの学習画面。
-// セーブなし・未解放・準備中の扱いは、ここでは案内の表示に留める。
-// 遷移を伴うルートガードは P1-13 で入れる。
+// セーブなし・不明なステージ・未解放は useRouteGuard が画面を移す。
+// 中身がまだ無いステージは、進行として正しい状態なので移さず案内に留める。
 
 export function StageScreen({ stageId }: { stageId: string }) {
-  const { isReady, hasSave, dispatch, isUnlocked } = useGame();
+  const { isReady, dispatch } = useGame();
   const stage = findStage(stageId);
+  // 不明なステージと未解放ステージへの直リンクはマップへ戻す（設計書「16.」）。
+  const guard = useRouteGuard({ stageId, stageExists: stage !== undefined });
 
   if (!isReady) {
     return (
@@ -25,44 +29,20 @@ export function StageScreen({ stageId }: { stageId: string }) {
     );
   }
 
-  if (!stage) {
+  if (guard.kind === "redirect") {
     return (
       <GameShell title="がくしゅう">
-        <PixelWindow heading="ステージが見つかりません">
-          <p>この場所は存在しません。</p>
-          <PixelLink href="/map" variant="primary">
-            マップへもどる
+        <PixelWindow heading={GUARD_HEADINGS[guard.reason]}>
+          <p>{GUARD_MESSAGES[guard.reason]}</p>
+          <PixelLink href={guard.to} variant="primary">
+            {guard.to === "/" ? "タイトルへ" : "マップへもどる"}
           </PixelLink>
         </PixelWindow>
       </GameShell>
     );
   }
 
-  if (!hasSave) {
-    return (
-      <GameShell title={stage.name}>
-        <PixelWindow heading="記録がありません">
-          <p>タイトルから、はじめから遊んでください。</p>
-          <PixelLink href="/" variant="primary">
-            タイトルへ
-          </PixelLink>
-        </PixelWindow>
-      </GameShell>
-    );
-  }
-
-  if (!isUnlocked(stage.id)) {
-    return (
-      <GameShell title={stage.name}>
-        <PixelWindow heading="まだ行けません">
-          <p>ひとつ前のステージをクリアすると進めます。</p>
-          <PixelLink href="/map" variant="primary">
-            マップへもどる
-          </PixelLink>
-        </PixelWindow>
-      </GameShell>
-    );
-  }
+  if (!stage) return null;
 
   const [lesson] = lessonsOfStage(stage);
 

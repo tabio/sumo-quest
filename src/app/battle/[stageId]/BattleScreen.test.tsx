@@ -13,9 +13,10 @@ import { BattleScreen } from "./BattleScreen";
 // P1-11 の完了条件は「選択肢の正誤演出と解説、同一問題の二重加点なし」。
 
 const push = vi.fn();
+const replace = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, replace }),
 }));
 
 const stage1Quizzes = quizzes.filter((quiz) => quiz.stageId === "sumo-stable");
@@ -76,6 +77,7 @@ async function answerAll(
 beforeEach(() => {
   window.localStorage.clear();
   push.mockClear();
+  replace.mockClear();
 });
 
 describe("取組画面", () => {
@@ -216,15 +218,14 @@ describe("取組画面", () => {
     expect(saved()?.experience).toBe(10 * stage1Quizzes.length + 50);
   });
 
-  it("未解放のステージでは取組できない", async () => {
+  it("未解放のステージへの直リンクはマップへ戻す", async () => {
     storeSave();
     renderBattle("dohyo");
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "まだ行けません" }),
-      ).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/map"));
+    expect(
+      screen.getByRole("region", { name: "まだ行けません" }),
+    ).toBeInTheDocument();
   });
 
   it("問題がないステージでは準備中を出す", async () => {
