@@ -1,0 +1,56 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.talk {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.portrait {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.speech {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.speaker {
+  font-family: var(--font-pixel);
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+}
+
+.message {
+  min-height: 4.5em;
+}
+
+.progress {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.discovered {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-success);
+  color: var(--color-success);
+  font-size: var(--font-size-sm);
+}
