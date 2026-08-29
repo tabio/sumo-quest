@@ -13,11 +13,18 @@ import styles from "./page.module.css";
 // ワールドマップ画面。設計書「6.3 ワールドマップ」。
 // セーブがない状態で来た場合の扱いは P1-13 のルートガードで入れる。
 
-// 図鑑・辞典・ステータスの3画面は Phase 2（P2-9〜P2-11）で作る。
+// マップ下部のメニュー。
+//
 // 画面ができるまでリンクにすると、静的エクスポートには行き先が無く、
 // 押した利用者が404で行き止まりになる。
-// 未解放の地点（WorldMap）と同じく、操作できない状態で存在だけを示す。
-const PREPARING_MENU = ["わざずかん", "すもうじてん", "ステータス"];
+// 未完成のものは、未解放の地点（WorldMap）と同じく操作できない状態で示す。
+// 画面ができたら href を与えてリンクに変える。
+const MENU: { label: string; href?: string }[] = [
+  { label: "わざずかん", href: "/techniques" },
+  // 用語辞典は P2-10、ステータス画面は P2-11 で作る。
+  { label: "すもうじてん" },
+  { label: "ステータス" },
+];
 
 export default function MapPage() {
   const { state, isReady } = useGame();
@@ -62,12 +69,16 @@ export default function MapPage() {
 
       <PixelWindow>
         <ul className={styles.menu}>
-          {PREPARING_MENU.map((label) => (
-            <li key={label}>
-              <span className={styles.menuItem} aria-disabled="true">
-                <span>{label}</span>
-                <span className={styles.menuState}>準備中</span>
-              </span>
+          {MENU.map((item) => (
+            <li key={item.label}>
+              {item.href ? (
+                <PixelLink href={item.href}>{item.label}</PixelLink>
+              ) : (
+                <span className={styles.menuItem} aria-disabled="true">
+                  <span>{item.label}</span>
+                  <span className={styles.menuState}>準備中</span>
+                </span>
+              )}
             </li>
           ))}
         </ul>

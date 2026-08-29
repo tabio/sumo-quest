@@ -1,0 +1,64 @@
+.count {
+  font-family: var(--font-pixel);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+}
+
+/* 未習得は色だけでなく、名前と説明の文言でも区別できるようにする。 */
+.unknown {
+  border-color: var(--color-disabled);
+  color: var(--color-disabled);
+}
+
+.name {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.06em;
+}
+
+.reading {
+  margin-left: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.difficulty {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.unknown .reading,
+.unknown .difficulty {
+  color: var(--color-disabled);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+}
+
+/* 記号は読み上げに向かないため、数値を添えて読ませる（設計書「15.」）。 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
