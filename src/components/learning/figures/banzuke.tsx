@@ -1,7 +1,7 @@
 import { Arrow } from "./parts";
 import styles from "./figures.module.css";
 
-// 番付と本場所の図（ADR-0008）。
+// 番付と本場所の図（ADR-0009）。
 // 順序・回数・日数といった、文章では並びが頭に入りにくい情報を図にする。
 //
 // 色つきの面には文字を載せない。文字は必ず板（plate）の上に置き、

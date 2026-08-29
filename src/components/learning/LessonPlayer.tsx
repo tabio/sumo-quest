@@ -76,7 +76,7 @@ export function LessonPlayer({
           </div>
         </div>
 
-        {/* 位置関係や順序は文章だけでは像を結びにくいため、図を差し込む（ADR-0008）。
+        {/* 位置関係や順序は文章だけでは像を結びにくいため、図を差し込む（ADR-0009）。
             図があるのは一部の画面だけで、無い画面は文章のみを出す。 */}
         {message.figureId ? <LessonFigure figureId={message.figureId} /> : null}
 

@@ -1,7 +1,7 @@
 import { Arrow, DohyoGround, Rikishi } from "./parts";
 import styles from "./figures.module.css";
 
-// 相撲部屋・土俵の学習で使う図（ADR-0008）。
+// 相撲部屋・土俵の学習で使う図（ADR-0009）。
 // 図はいずれも「文章で説明しにくい位置関係」だけを描き、説明そのものは本文に残す。
 
 /** 土俵のつくり。真上から見た図。 */

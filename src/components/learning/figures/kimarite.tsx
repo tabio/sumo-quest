@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Arrow, DohyoGround, Rikishi, TurnArrow } from "./parts";
 import styles from "./figures.module.css";
 
-// 決まり手の図（ADR-0008）。
+// 決まり手の図（ADR-0009）。
 //
 // 6種はどれも「相手を外へ出す」か「土俵につかせる」かのどちらかで、
 // 文章だけでは違いが見えにくい。図では次の3点だけを描き分ける。

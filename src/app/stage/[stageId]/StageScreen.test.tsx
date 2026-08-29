@@ -185,7 +185,7 @@ describe("学習画面", () => {
     renderStage();
 
     await waitFor(() =>
-      expect(screen.getByText(lesson.messages[0])).toBeInTheDocument(),
+      expect(screen.getByText(lesson.messages[0].text)).toBeInTheDocument(),
     );
     await user.click(screen.getByRole("button", { name: "つぎへ" }));
     await user.click(screen.getByRole("button", { name: "やめる" }));

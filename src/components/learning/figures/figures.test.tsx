@@ -4,7 +4,7 @@ import { LESSON_FIGURES, LessonFigure } from "./index";
 import { lessons } from "@/data/lessons";
 import { LESSON_FIGURE_IDS } from "@/types/game";
 
-// 学習に差し込む図（ADR-0008）。
+// 学習に差し込む図（ADR-0009）。
 //
 // 図の見た目そのものは自動では確かめられない。
 // ここで守るのは、見出しと説明が欠けないことと、

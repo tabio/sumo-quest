@@ -98,11 +98,11 @@ export const LESSON_FIGURE_IDS = [
 /**
  * 図の永続キー。
  * このキーに対応する図が存在することは、描画側の対応表を
- * Record<LessonFigureId, ...> にすることで型で保証する（ADR-0008）。
+ * Record<LessonFigureId, ...> にすることで型で保証する（ADR-0009）。
  */
 export type LessonFigureId = (typeof LESSON_FIGURE_IDS)[number];
 
-/** 学習の1画面分。図を伴う画面と伴わない画面を同じ形で持つ（ADR-0008）。 */
+/** 学習の1画面分。図を伴う画面と伴わない画面を同じ形で持つ（ADR-0009）。 */
 export type LessonMessage = {
   text: string;
   /** この画面に差し込む図。省略した画面は文章だけを出す。 */

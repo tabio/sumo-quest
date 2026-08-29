@@ -19,7 +19,7 @@ import {
 import type { LessonFigureId } from "@/types/game";
 import styles from "./figures.module.css";
 
-// 学習に差し込む図の対応表（ADR-0008）。
+// 学習に差し込む図の対応表（ADR-0009）。
 //
 // Record<LessonFigureId, ...> にしてあるため、
 // データが参照する図が無ければ型検査で落ちる。実行時の検査は置かない。
