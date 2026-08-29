@@ -1,5 +1,8 @@
 # SUMO QUEST 設計書
 
+> 実行計画は [docs/plans/](plans/README.md) を参照。
+> 本書の変更は原則として直接編集せず、[decisions/](plans/decisions/) にADRを追加する（[CONVENTIONS.md](plans/CONVENTIONS.md)）。
+
 ## 1. 文書の目的
 
 本書は「SUMO QUEST」MVPを、Next.jsの静的サイトとして実装するための基本設計・詳細設計を定める。画面遷移、ゲーム進行、状態、データ、コンポーネント、保存、配信、テスト、実装順を対象とする。

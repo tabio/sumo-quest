@@ -1,5 +1,8 @@
 # PRD：SUMO QUEST（スモウクエスト）
 
+> 実行計画は [docs/plans/](plans/README.md) を参照。
+> 本書の変更は原則として直接編集せず、[decisions/](plans/decisions/) にADRを追加する（[CONVENTIONS.md](plans/CONVENTIONS.md)）。
+
 ## 1. プロダクト概要
 
 ### コンセプト
