@@ -1,5 +1,6 @@
 .count {
   font-family: var(--font-pixel);
+  color: var(--color-accent-light);
 }
 
 .list {
@@ -13,9 +14,15 @@
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-3);
-  border: var(--border-width) solid var(--color-border);
+  /* 見出し語の側に色帯を置き、一覧の並びに律動を作る。 */
+  border-left: var(--space-1) solid var(--color-verdant);
+  border-top: 1px solid var(--color-divider);
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
   border-radius: var(--border-radius);
   background-color: var(--color-surface);
+  background-image: var(--gradient-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 .name {

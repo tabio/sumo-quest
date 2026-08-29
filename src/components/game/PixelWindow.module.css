@@ -1,17 +1,49 @@
 .window {
+  position: relative;
   background-color: var(--color-surface);
+  background-image: var(--gradient-surface);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius);
+  box-shadow: var(--shadow-window);
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
+/* 内側にもう1本の細い線を引く。
+ * 16bit期のメッセージウィンドウは二重枠で縁取られているものが多く、
+ * 枠を太くせずに厚みを出せる。 */
+.window::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--border-radius);
+  pointer-events: none;
+}
+
 .heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-divider);
+
   font-family: var(--font-pixel);
   font-size: var(--font-size-lg);
   line-height: var(--line-height-tight);
   letter-spacing: 0.06em;
   color: var(--color-accent);
+  text-shadow: var(--text-shadow-pixel);
+}
+
+/* 見出しの先頭に土俵の房を模した小さな四角を置く。 */
+.heading::before {
+  content: "";
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  background-image: var(--gradient-accent);
+  box-shadow: 0 0 0 2px var(--color-bevel-dark);
 }

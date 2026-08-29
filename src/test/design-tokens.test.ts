@@ -64,6 +64,10 @@ describe("デザイントークン", () => {
     ["不正解表示", "color-danger", "color-surface"],
     ["未解放・未習得の説明", "color-text-muted", "color-surface"],
     ["エンディングの見出し", "color-accent", "color-surface"],
+    ["沈んだ面の本文", "color-text", "color-surface-sunken"],
+    ["沈んだ面の補助テキスト", "color-text-muted", "color-surface-sunken"],
+    ["数値の強調", "color-accent-light", "color-surface"],
+    ["数値の強調（沈んだ面）", "color-accent-light", "color-surface-sunken"],
   ])("%s のコントラスト比が4.5:1以上", (_label, foreground, background) => {
     expect(contrastRatio(token(foreground), token(background))).toBeGreaterThan(
       TEXT_MINIMUM,
@@ -102,7 +106,32 @@ describe("デザイントークン", () => {
     expect(reduced).toContain("transition-duration: 0.01ms !important");
   });
 
-  it("角丸を持たない", () => {
-    expect(token("border-radius")).toBe("0");
+  it("角丸がピクセルグリッドを外れない", () => {
+    // ADR-0007。16bit風にするため角を2pxだけ落とすが、そこまでとする。
+    // 4pxを超えると、レトロRPGではなく現代のWeb UIの見た目になる。
+    const radius = parseInt(token("border-radius"), 10);
+    expect(radius).toBeGreaterThanOrEqual(0);
+    expect(radius).toBeLessThanOrEqual(4);
+    expect(radius % 2).toBe(0);
+  });
+
+  it("枠線がピクセルグリッドに乗る", () => {
+    // ADR-0007。細くしすぎると枠が消え、太くすると8bit風に戻る。
+    const width = parseInt(token("border-width"), 10);
+    expect(width).toBeGreaterThanOrEqual(2);
+    expect(width).toBeLessThanOrEqual(4);
+    expect(width % 2).toBe(0);
+  });
+
+  it("基調3色がすべて定義されている", () => {
+    // ADR-0007。黒（面）・オレンジ（主強調）・緑（副強調）を基調とする。
+    for (const name of [
+      "color-bg",
+      "color-surface",
+      "color-accent",
+      "color-verdant",
+    ]) {
+      expect(token(name)).toMatch(/^#[0-9a-f]{6}$/);
+    }
   });
 });

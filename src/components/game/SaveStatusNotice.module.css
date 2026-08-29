@@ -1,8 +1,30 @@
 /* 色だけに頼らず、枠と文言でも異常だと分かるようにする（設計書「15.」）。 */
 .notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-3);
+  background-color: var(--color-surface);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 138, 122, 0.12) 0%,
+    rgba(255, 138, 122, 0) 100%
+  );
   border: var(--border-width) solid var(--color-danger);
+  border-radius: var(--border-radius);
   color: var(--color-danger);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-body);
+}
+
+/* 形でも異常だと分かるようにする。
+ * 文字を content に入れると読み上げに混ざるため、三角形を線で描く。 */
+.notice::before {
+  content: "";
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 14px solid var(--color-danger);
 }

@@ -9,6 +9,14 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: baseline;
+  padding-bottom: var(--space-2);
+  /* 行ごとに細い区切りを引き、数値を追いやすくする。 */
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .label {
@@ -20,6 +28,7 @@
 .value {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
+  color: var(--color-accent-light);
 }
 
 .stages {
@@ -34,9 +43,16 @@
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-3);
-  border: var(--border-width) solid var(--color-border);
+  /* 帯は中立色にする。この一覧は状態で並びを分けていないため、
+   * 緑（達成）やオレンジ（現在地）を出すと意味を取り違えさせる。 */
+  border-left: var(--space-1) solid var(--color-border);
+  border-top: 1px solid var(--color-divider);
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
   border-radius: var(--border-radius);
   background-color: var(--color-surface);
+  background-image: var(--gradient-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 .stageName {

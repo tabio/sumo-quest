@@ -7,17 +7,24 @@
 .label {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
+  color: var(--color-accent-light);
 }
 
+/* 入力欄は沈んだ面にする。押せる面（ボタン）と役割を見た目で分ける。 */
 .input {
   min-height: var(--tap-min-size);
   padding: var(--space-2) var(--space-3);
   font-family: var(--font-body);
   font-size: var(--font-size-base);
   color: var(--color-text);
-  background-color: var(--color-bg);
+  background-color: var(--color-surface-sunken);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius);
+  box-shadow: var(--shadow-pressed);
+}
+
+.input::placeholder {
+  color: var(--color-disabled);
 }
 
 .input[aria-invalid="true"] {

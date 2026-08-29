@@ -6,17 +6,43 @@
 }
 
 .point {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--tap-min-size);
   padding: var(--space-3);
+  /* 左端に状態を示す色帯を出すため、その幅だけ内側へ寄せる。 */
+  padding-left: var(--space-4);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius);
   background-color: var(--color-surface);
+  background-image: var(--gradient-raised);
+  box-shadow: var(--shadow-raised);
   color: var(--color-text);
   text-align: left;
   width: 100%;
+  transition:
+    transform var(--duration-fast) linear,
+    border-color var(--duration-fast) linear;
+}
+
+/* 左端の色帯。状態ごとに色を変える。
+ * 帯だけでは伝わらないため、記号（.marker）と文言（.state）も併記する（設計書「15.」）。 */
+.point::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--space-1);
+  background-color: var(--color-border);
+}
+
+/* 選べる地点は、押せることが分かるように少しだけ動かす。 */
+a.point:hover {
+  border-color: var(--color-accent-light);
+  transform: translateX(var(--space-1));
 }
 
 /* 状態は色だけでなく、記号と文言でも示す（設計書「15.」）。 */
@@ -24,7 +50,9 @@
   flex-shrink: 0;
   width: 2.5em;
   font-family: var(--font-pixel);
+  font-size: var(--font-size-lg);
   text-align: center;
+  text-shadow: var(--text-shadow-pixel);
 }
 
 .body {
@@ -43,8 +71,22 @@
   color: var(--color-text-muted);
 }
 
+/* 現在地。オレンジの帯と枠で最も強く示す。 */
 .current {
   border-color: var(--color-accent);
+}
+
+.current::before {
+  background-image: var(--gradient-accent);
+}
+
+.current .marker {
+  color: var(--color-accent);
+}
+
+/* クリア済み。緑の帯で示す。 */
+.cleared::before {
+  background-image: var(--gradient-verdant);
 }
 
 .cleared .marker {
@@ -56,6 +98,16 @@
  * 操作できないことは枠の色・記号・文言で示す（設計書「15.」）。 */
 .locked {
   background-color: var(--color-bg);
+  background-image: none;
   border-color: var(--color-disabled);
+  box-shadow: none;
   color: var(--color-text-muted);
+}
+
+.locked::before {
+  background-color: var(--color-disabled);
+}
+
+.locked .marker {
+  text-shadow: none;
 }

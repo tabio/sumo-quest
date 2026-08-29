@@ -5,6 +5,7 @@
   letter-spacing: 0.06em;
   color: var(--color-accent);
   text-align: center;
+  text-shadow: var(--text-shadow-pixel);
 }
 
 .story {
@@ -24,6 +25,13 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: baseline;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .label {
@@ -35,6 +43,7 @@
 .value {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
+  color: var(--color-accent-light);
 }
 
 .actions {

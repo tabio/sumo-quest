@@ -1,23 +1,92 @@
 /* デザイントークン。
  * 色・余白・フォントの値はここを正とし、コンポーネント側で直接色を書かない。
  * 方針の出典はPRD「13. デザイン方針」と設計書「15. レスポンシブ・アクセシビリティ」。
+ * 表現の水準（8bit風から16bit風へ）と配色の根拠は
+ * docs/plans/decisions/0007-16bit-visual-style.md を参照する。
  */
 
 :root {
-  /* 色。PRDの「限定した色数」に従い、用途ごとに1つずつ持つ。
+  /* 色。相撲でよく見る黒・オレンジ・緑を基調とする。
+   * 黒＝土俵まわりの黒房と行司装束、オレンジ＝土俵の荒木田土、緑＝青房と松。
+   * PRDの「限定した色数」に従い、3系統それぞれに濃淡を持たせて色数を増やさない。
    * 文字色と背景色の組み合わせは design-tokens.test.ts でコントラスト比を検査する。 */
-  --color-bg: #10162c;
-  --color-surface: #1e2748;
-  --color-surface-raised: #33406e;
-  --color-border: #f2eede;
-  --color-text: #f2eede;
-  --color-text-muted: #b9c2de;
-  --color-accent: #f0b429;
-  --color-accent-text: #10162c;
-  --color-clay: #b4622c;
-  --color-success: #7ad07f;
+
+  /* 黒系。背景と面。16bit機の背景は真っ黒ではなく、わずかに色が乗っていた。 */
+  --color-bg: #12100d;
+  --color-bg-deep: #0a0907;
+  --color-surface: #1e1a16;
+  --color-surface-raised: #2d2721;
+  --color-surface-sunken: #171310;
+
+  /* 枠。単色の白枠をやめ、光と影の2色で立体を作る（16bit風の面取り）。 */
+  --color-border: #6b5a45;
+  --color-border-strong: #a08659;
+  --color-bevel-light: #4a3f32;
+  --color-bevel-dark: #0a0806;
+  --color-divider: #3d342b;
+
+  /* 文字。 */
+  --color-text: #f6efe3;
+  --color-text-muted: #c0b09a;
+
+  /* オレンジ系。主役の強調色。 */
+  --color-accent: #f0872b;
+  --color-accent-light: #ffb35c;
+  --color-accent-deep: #b85f18;
+  --color-accent-text: #1a1108;
+
+  /* 緑系。副次の強調色。進行・達成・肯定に充てる。 */
+  --color-verdant: #3f9e5c;
+  --color-verdant-light: #6fd18b;
+  --color-verdant-deep: #235f3a;
+
+  /* 状態色。 */
+  --color-clay: #b85f18;
+  --color-success: #6fd18b;
   --color-danger: #ff8a7a;
-  --color-disabled: #6b74a0;
+  --color-disabled: #7a6c5c;
+
+  /* 面のグラデーション。
+   * 8bit機は面を1色で塗るしかなかったが、16bit機は階調を持てた。
+   * ここでの2色グラデーションが「スーパーファミコンらしさ」の中心になる。 */
+  --gradient-surface: linear-gradient(
+    180deg,
+    #241f1a 0%,
+    var(--color-surface) 55%,
+    #191512 100%
+  );
+  --gradient-raised: linear-gradient(
+    180deg,
+    #38302a 0%,
+    var(--color-surface-raised) 55%,
+    #241f1a 100%
+  );
+  --gradient-accent: linear-gradient(
+    180deg,
+    var(--color-accent-light) 0%,
+    var(--color-accent) 55%,
+    var(--color-accent-deep) 100%
+  );
+  --gradient-verdant: linear-gradient(
+    180deg,
+    var(--color-verdant-light) 0%,
+    var(--color-verdant) 55%,
+    var(--color-verdant-deep) 100%
+  );
+
+  /* 影と面取り。
+   * ぼかしは最小限に留め、1〜2pxの硬い影を主に使う。
+   * ぼかしを強くすると一気に現代のWeb UIの見た目になり、RPGらしさが消える。 */
+  --bevel-inset:
+    inset 0 var(--border-width) 0 0 var(--color-bevel-light),
+    inset 0 calc(var(--border-width) * -1) 0 0 var(--color-bevel-dark);
+  --shadow-window:
+    var(--bevel-inset), 0 var(--border-width) 0 0 var(--color-bevel-dark),
+    0 6px 16px rgba(0, 0, 0, 0.45);
+  --shadow-raised:
+    var(--bevel-inset), 0 var(--border-width) 0 0 var(--color-bevel-dark);
+  --shadow-pressed: inset 0 var(--border-width) 0 0 var(--color-bevel-dark);
+  --text-shadow-pixel: 0 2px 0 var(--color-bevel-dark);
 
   /* 余白。4pxのピクセルグリッドに揃える。 */
   --space-1: 4px;
@@ -28,9 +97,13 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  /* 枠線。ドット絵の見た目を保つため角丸は持たない。 */
-  --border-width: 4px;
-  --border-radius: 0;
+  /* 枠線。
+   * 太さは4pxから2pxへ下げる。16bit機は解像度が上がり、枠が相対的に細くなった。
+   * 角丸はピクセルグリッド上の2pxまでとし、それ以上は丸めない。
+   * 完全な直角は8bit機の制約に由来する見た目であり、
+   * 16bit期のウィンドウ枠はわずかに角が落ちていた。 */
+  --border-width: 2px;
+  --border-radius: 2px;
 
   /* フォント。
    * ピクセルフォントは本文の可読性を損なうため、見出しと数値に限って使う。
@@ -81,9 +154,31 @@ body {
   overflow-x: hidden;
 }
 
+/* 背景。
+ * 16bit機は複数のBG面を重ねられた。ここでも単色ではなく層を重ねる。
+ * 上からの土色の光、下からの緑の光、全面の走査線を重ね、画面を固定する。 */
 body {
   min-height: 100%;
   background-color: var(--color-bg);
+  background-image:
+    radial-gradient(
+      120% 70% at 50% 0%,
+      rgba(240, 135, 43, 0.13) 0%,
+      rgba(240, 135, 43, 0) 60%
+    ),
+    radial-gradient(
+      110% 60% at 50% 100%,
+      rgba(63, 158, 92, 0.1) 0%,
+      rgba(63, 158, 92, 0) 60%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.022) 0px,
+      rgba(255, 255, 255, 0.022) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--font-size-base);
@@ -103,9 +198,11 @@ img {
   height: auto;
 }
 
-/* フォーカスリングを必ず見えるようにする（設計書「15.」）。 */
+/* フォーカスリングを必ず見えるようにする（設計書「15.」）。
+ * 枠線を細くした分、リングは枠より太くして見分けられるようにする。
+ * box-shadow は部品の面取りに使っているため、ここでは outline だけで表現する。 */
 :focus-visible {
-  outline: var(--border-width) solid var(--color-accent);
+  outline: calc(var(--border-width) + 1px) solid var(--color-accent-light);
   outline-offset: 2px;
 }
 

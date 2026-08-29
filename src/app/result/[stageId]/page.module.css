@@ -8,6 +8,13 @@
   display: flex;
   justify-content: space-between;
   gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .label {
@@ -17,12 +24,15 @@
 .value {
   font-family: var(--font-pixel);
   letter-spacing: 0.06em;
+  color: var(--color-accent-light);
 }
 
+/* 勝敗は取組結果の顔。他より一段大きく、影を付けて見せる。 */
 .verdict {
   font-family: var(--font-pixel);
   font-size: var(--font-size-lg);
   letter-spacing: 0.06em;
+  text-shadow: var(--text-shadow-pixel);
 }
 
 .passed {

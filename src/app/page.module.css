@@ -3,14 +3,53 @@
   font-size: var(--font-size-xl);
   line-height: var(--line-height-tight);
   letter-spacing: 0.12em;
-  color: var(--color-accent);
+  color: var(--color-accent-light);
   text-align: center;
+  padding: var(--space-5) 0 var(--space-2);
+  /* タイトルロゴだけは影を厚めに重ね、16bit期のロゴのような縁取りにする。 */
+  text-shadow:
+    2px 0 0 var(--color-accent-deep),
+    -2px 0 0 var(--color-accent-deep),
+    0 -2px 0 var(--color-accent-deep),
+    0 2px 0 var(--color-accent-deep),
+    0 6px 0 var(--color-bevel-dark),
+    0 10px 24px rgba(0, 0, 0, 0.55);
+}
+
+/* 土俵の四隅に下がる房を模した帯。黒・オレンジ・緑の基調色をここで一度に見せる。 */
+.logo::after {
+  content: "";
+  display: block;
+  width: 160px;
+  height: var(--space-1);
+  margin: var(--space-4) auto 0;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-bevel-dark) 0 25%,
+    var(--color-accent) 25% 50%,
+    var(--color-verdant) 50% 75%,
+    var(--color-border-strong) 75% 100%
+  );
+  box-shadow: 0 2px 0 var(--color-bevel-dark);
 }
 
 .subtitle {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  letter-spacing: 0.16em;
   text-align: center;
+}
+
+/* 副題の左右に横線を引き、タイトルとメニューの間に区切りを作る。 */
+.subtitle::before,
+.subtitle::after {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  margin: 0 var(--space-2);
+  vertical-align: middle;
+  background-color: var(--color-divider);
 }
 
 .menu {
