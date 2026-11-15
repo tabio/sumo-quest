@@ -157,6 +157,7 @@ describe("ワールドマップ", () => {
   it.each([
     ["わざずかん", "/techniques"],
     ["すもうじてん", "/dictionary"],
+    ["きまりていちらん", "/kimarite"],
     ["ステータス", "/status"],
   ])("%s へ進める", async (label, href) => {
     storeSave(createSave());

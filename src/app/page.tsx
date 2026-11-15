@@ -94,6 +94,7 @@ export default function TitlePage() {
 
             <PixelLink href="/techniques">わざずかん</PixelLink>
             <PixelLink href="/dictionary">すもうじてん</PixelLink>
+            <PixelLink href="/kimarite">きまりていちらん</PixelLink>
           </div>
 
           {hasSave ? (
