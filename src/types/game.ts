@@ -188,3 +188,46 @@ export type Rank = {
   /** 横綱のみ true。EXPを満たしても最終試験クリアまで昇進しない。 */
   requiresFinalExam?: boolean;
 };
+
+// 以下は決まり手図鑑のための型。設計書「8. データモデル」に定義がない。
+// 経緯は docs/plans/decisions/0011-kimarite-database.md を参照。
+
+/**
+ * 決まり手の分類の永続キー。並びは日本相撲協会の掲載順に合わせる。
+ * 決まり手の取得スクリプトは、協会側の分類番号をこの並びの位置で解釈する。
+ */
+export const KIMARITE_CATEGORY_IDS = [
+  "kihon",
+  "nagete",
+  "kakete",
+  "sorite",
+  "hinerite",
+  "tokushu",
+  "higi",
+] as const;
+
+export type KimariteCategoryId = (typeof KIMARITE_CATEGORY_IDS)[number];
+
+export type KimariteCategory = {
+  id: KimariteCategoryId;
+  /** 表示名。例：投げ手。 */
+  name: string;
+  reading: string;
+  /** 表示順。 */
+  order: number;
+  /** 非技（勝負結果）のみ false。決まり手八十二手には数えない。 */
+  isTechnique: boolean;
+};
+
+/** 決まり手1件。収録するのは事実のみで、解説文は持たない（ADR-0011）。 */
+export type Kimarite = {
+  /** 読みのヘボン式ローマ字。Technique.id と同じ規則で振る。 */
+  id: string;
+  name: string;
+  reading: string;
+  categoryId: KimariteCategoryId;
+  /** 表示順。日本相撲協会の掲載順。 */
+  order: number;
+  /** 日本相撲協会のサイトが技を識別する番号。ランキング等と突き合わせるために持つ。 */
+  kyokaiCode: number;
+};
