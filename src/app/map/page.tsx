@@ -18,6 +18,7 @@ import styles from "./page.module.css";
 const MENU = [
   { label: "わざずかん", href: "/techniques" },
   { label: "すもうじてん", href: "/dictionary" },
+  { label: "きまりていちらん", href: "/kimarite" },
   { label: "ステータス", href: "/status" },
 ] as const;
 

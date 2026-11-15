@@ -1,0 +1,46 @@
+.count {
+  font-family: var(--font-pixel);
+  color: var(--color-accent-light);
+}
+
+.note {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* 件数が多いため、幅に応じて段組みにする。
+ * 段の最小幅は、最も長い7文字の技名（送り引き落とし）が1行に収まる幅とする。
+ * 狭い画面で1段になったときに横へはみ出さないよう、100%を超えない。 */
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr));
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  /* 図鑑・辞典と同じく見出し語の側に色帯を置く。 */
+  border-left: var(--space-1) solid var(--color-verdant);
+  border-top: 1px solid var(--color-divider);
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+  background-image: var(--gradient-surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.name {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
+}
+
+.reading {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

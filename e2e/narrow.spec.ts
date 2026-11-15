@@ -108,6 +108,11 @@ test.describe("320px幅での表示", () => {
     await page.getByRole("link", { name: "すもうじてん" }).click();
     await check(page, "すもうじてん");
 
+    // 件数が多く段組みにしているため、最も崩れやすい（ADR-0012）。
+    await page.getByRole("link", { name: "マップへもどる" }).click();
+    await page.getByRole("link", { name: "きまりていちらん" }).click();
+    await check(page, "きまりていちらん");
+
     await page.getByRole("link", { name: "マップへもどる" }).click();
     await page.getByRole("link", { name: "ステータス" }).click();
     await check(page, "ステータス");

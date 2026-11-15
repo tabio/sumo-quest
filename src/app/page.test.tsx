@@ -117,7 +117,7 @@ describe("タイトル画面", () => {
     expect(screen.getByRole("button", { name: "つづきから" })).toBeDisabled();
   });
 
-  it("図鑑と辞典への導線がある", async () => {
+  it("図鑑・辞典・決まり手一覧への導線がある", async () => {
     renderTitle();
 
     await waitFor(() =>
@@ -130,5 +130,8 @@ describe("タイトル画面", () => {
       "href",
       "/dictionary",
     );
+    expect(
+      screen.getByRole("link", { name: "きまりていちらん" }),
+    ).toHaveAttribute("href", "/kimarite");
   });
 });

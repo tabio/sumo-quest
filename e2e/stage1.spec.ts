@@ -235,7 +235,7 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
   });
 
   // 図鑑と辞典はタイトルからの導線に含まれる（PRD「12. 主要画面」）。
-  test("セーブがなくても図鑑と辞典を開ける", async ({ page }) => {
+  test("セーブがなくても図鑑・辞典・決まり手一覧を開ける", async ({ page }) => {
     await page.goto("./");
 
     await page.getByRole("link", { name: "わざずかん" }).click();
@@ -251,6 +251,13 @@ test.describe("新規開始から STAGE 1 クリアまで", () => {
     await expect(
       page.getByRole("region", { name: "まだ何もない" }),
     ).toBeVisible();
+    await page.getByRole("link", { name: "タイトルへもどる" }).click();
+
+    await page.getByRole("link", { name: "きまりていちらん" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "きまりていちらん",
+    );
+    await expect(page.getByText("決まり手 82 ＋ 非技 5")).toBeVisible();
     await page.getByRole("link", { name: "タイトルへもどる" }).click();
     await expect(
       page.getByRole("heading", { level: 1, name: "SUMO QUEST" }),
